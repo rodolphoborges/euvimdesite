@@ -107,7 +107,7 @@ for (const v of videos.slice(0,50)) {
     .replaceAll('__URL__', v.url)
     .replaceAll('__CAT__', v.cat)
     .replaceAll('__STATS__', statsHtml(v))
-    .replaceAll('__NEXT__', rel.map(r=>`<article class="card"><a class="thumb" href="../v/${r.id}.html"><img loading="lazy" src="${r.thumb}" alt=""></a><div class="corpo"><h3><a href="../v/${r.id}.html">${escH(r.title)}</a></h3></div></article>`).join(''));
+    .replaceAll('__NEXT__', rel.map((r,i)=>`<li><a class="linha" href="../v/${r.id}.html"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="linha-corpo"><span class="linha-kicker">${escH(r.cat)} · ${new Date(r.published).toLocaleDateString('pt-BR')}${r.views ? ' · ' + fmtCompact(r.views) + ' views' : ''}</span><span class="linha-titulo">${escH(r.title)}</span></span><img class="mini" loading="lazy" src="${r.thumb}" alt=""><span class="seta" aria-hidden="true">→</span></a></li>`).join(''));
   writeFileSync(`v/${v.id}.html`, html);
 }
 

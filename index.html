@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Eu Vim de Santos — Táticas, Comentários e Notícias</title>
-<meta name="description" content="Site complementar ao canal Eu Vim de Santos, por Felipe Noronha. Análises táticas, comentários, notícias, entrevistas e shorts sobre o Santos FC, atualizado automaticamente pelo YouTube.">
+<title>Eu Vim de Santos — a coluna de Felipe Noronha</title>
+<meta name="description" content="A coluna de Felipe Noronha sobre o Santos FC: análises táticas, comentários, notícias e entrevistas. Atualizado automaticamente pelo YouTube.">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#000066">
-<meta property="og:title" content="Eu Vim de Santos">
-<meta property="og:description" content="Táticas, comentários e notícias sobre o Santos FC. Por Felipe Noronha.">
+<meta name="theme-color" content="#04042a">
+<meta property="og:title" content="Eu Vim de Santos — a coluna de Felipe Noronha">
+<meta property="og:description" content="Análises táticas, comentários e notícias do Santos FC.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://i2.ytimg.com/vi/eq2cPrAdBm0/hqdefault.jpg">
 <link rel="preconnect" href="https://i.ytimg.com">
@@ -18,88 +18,76 @@
 </head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
-<header class="topo">
-  <div class="wrap topo-in">
-    <a class="brand" href="./" aria-label="Eu Vim de Santos - início">
-      <img src="assets/img/logo.svg" width="44" height="44" alt="Escudo branco com coroa dourada">
-      <span class="brand-tx"><strong>EU VIM DE</strong><strong>SANTOS</strong><small>Por Felipe Noronha</small></span>
+<header class="masthead">
+  <div class="wrap masthead-in">
+    <a class="marca" href="./" aria-label="Eu Vim de Santos - início">
+      <img src="assets/img/logo.svg" width="34" height="34" alt="Escudo branco com coroa dourada">
+      <span class="marca-nome"><strong>EU VIM DE SANTOS</strong><em>por Felipe Noronha</em></span>
     </a>
-    <nav aria-label="Principal">
-      <a href="./" aria-current="page">Início</a>
-      <a href="videos/">Vídeos</a>
-      <a href="videos/?cat=taticas">Táticas</a>
-      <a href="videos/?cat=noticias">Notícias</a>
-      <a href="videos/?cat=entrevistas">Entrevistas</a>
+    <nav class="menu" aria-label="Principal">
+      <a href="./" aria-current="page">Hoje</a>
+      <a href="videos/">Arquivo</a>
       <a href="sobre/">Sobre</a>
     </nav>
-    <a class="btn-inscrever" href="https://www.youtube.com/@EuVimdeSantos?sub_confirmation=1" target="_blank" rel="noopener">Inscrever-se</a>
+    <span class="edicao" id="hoje"></span>
+    <a class="assinar" href="https://www.youtube.com/@EuVimdeSantos?sub_confirmation=1" target="_blank" rel="noopener">Assinar</a>
   </div>
 </header>
 
 <main id="conteudo">
-<section class="hero wrap">
-  <div class="hero-tx">
-    <p class="kicker">Canal Eu Vim de Santos · por Felipe Noronha</p>
-    <h1>Fora do algoritmo.<br><em>Dentro da Vila.</em></h1>
-    <p class="lede">Análises táticas, comentários e notícias do Santos FC num site calmo, rápido e complementar ao YouTube — atualizado sozinho a cada vídeo novo.</p>
-    <ul class="tags"><li>Táticas</li><li>Comentários</li><li>Notícias</li><li>Entrevistas</li></ul>
-    <div class="hero-cta">
-      <a class="btn primario" href="videos/">Ver últimos vídeos</a>
-      <a class="btn" href="https://www.youtube.com/@EuVimdeSantos" target="_blank" rel="noopener">Abrir no YouTube</a>
-    </div>
-    <p class="meta" id="last-update">Atualizando…</p>
-  </div>
-  <div class="hero-video" id="destaque">
-    <!-- preenchido via JS: vídeo mais recente com fachada leve -->
-    <noscript><a href="https://www.youtube.com/@EuVimdeSantos">Ver canal no YouTube</a></noscript>
-  </div>
+<section class="destaque">
+  <p class="kicker">O vídeo mais recente · <span id="last-update">atualizando…</span></p>
+  <h1 class="destaque-titulo" id="hero-titulo"><a href="videos/">A coluna santista, fora do algoritmo.</a></h1>
+  <p class="lede" id="hero-desc">Todo vídeo novo do canal aparece aqui sozinho — análise tática, comentário, notícia ou entrevista.</p>
+  <div class="player" style="margin-top:26px"><div id="destaque"><noscript><a href="https://www.youtube.com/@EuVimdeSantos">Ver canal no YouTube</a></noscript></div></div>
+  <p class="video-meta-linha"><span class="cat" id="hero-cat"></span><span id="hero-meta"></span><a class="ir" id="hero-link" href="videos/">Abrir página do vídeo →</a></p>
 </section>
 
-<section class="wrap secao">
+<section class="secao" aria-label="Índice">
   <div class="secao-h">
-    <div><p class="eyebrow">Atualizado pelo YouTube</p><h2>Últimos vídeos</h2></div>
-    <a href="videos/">Ver todos →</a>
+    <h2>Índice</h2>
+    <a href="videos/">Arquivo completo →</a>
   </div>
-  <div class="filtros" role="group" aria-label="Filtrar por categoria">
-    <button data-cat="all" class="on">Todos</button>
+  <div class="tabs" role="group" aria-label="Filtrar por editoria">
+    <button data-cat="all" class="on">Tudo</button>
     <button data-cat="taticas">Táticas</button>
     <button data-cat="comentarios">Comentários</button>
     <button data-cat="noticias">Notícias</button>
     <button data-cat="entrevistas">Entrevistas</button>
     <button data-cat="lives">Lives</button>
   </div>
-  <div class="grade" id="grade-home"></div>
+  <ol class="indice" id="grade-home"></ol>
 </section>
 
-<section class="wrap secao">
+<section class="secao" aria-label="Shorts">
   <div class="secao-h">
-    <div><p class="eyebrow">Formato vertical</p><h2>Shorts</h2></div>
-    <a href="videos/?cat=shorts">Ver shorts →</a>
+    <h2>Em um minuto</h2>
+    <a href="videos/?cat=shorts">Todos os shorts →</a>
   </div>
-  <div class="rail" id="grade-shorts"></div>
+  <div class="tira" id="grade-shorts"></div>
 </section>
 
-<section class="wrap sobre-mini">
-  <div>
-    <h2>Por Felipe Noronha <span class="handle">@fgnoronha</span></h2>
-    <p>Jornalista. Comentários e análises sobre o Santos (quase) todo dia. Análises táticas com imagem, Live do Trio com Edu e Gabi, e o quadro Eu Vim de Entrevista.</p>
-    <p><a href="sobre/">Conhecer + apoiar →</a></p>
-  </div>
-  <ul class="links">
-    <li><a href="https://www.youtube.com/channel/UC2yJDeDFcv1cAHA0BgfJ9ww/join" target="_blank" rel="noopener">Seja Membro EVS</a></li>
-    <li><a href="https://www.youtube.com/@Noronhismo" target="_blank" rel="noopener">2º canal: Noronhismo</a></li>
-    <li><a href="https://www.instagram.com/fgnoronha" target="_blank" rel="noopener">Instagram @fgnoronha</a></li>
-  </ul>
+<section class="assinatura">
+  <blockquote>“Comentários e análises sobre o Santos — quase todo dia.”</blockquote>
+  <cite>Felipe Noronha · @fgnoronha</cite>
+  <nav>
+    <a href="https://www.youtube.com/channel/UC2yJDeDFcv1cAHA0BgfJ9ww/join" target="_blank" rel="noopener">Seja membro</a>
+    <a href="https://www.youtube.com/@Noronhismo" target="_blank" rel="noopener">Noronhismo</a>
+    <a href="sobre/">Sobre a coluna</a>
+  </nav>
 </section>
 </main>
 
 <footer>
-  <div class="wrap foot">
-    <p><strong>Eu Vim de Santos</strong> — site de fãs complementar ao canal. Não afiliado ao Santos FC / YouTube.</p>
-    <p><a href="https://www.youtube.com/@EuVimdeSantos" target="_blank" rel="noopener">YouTube</a> · <a href="feed.xml">RSS do site</a> · <a href="sobre/">Sobre</a> · <span id="ano"></span></p>
+  <div class="foot">
+    <p><strong>Eu Vim de Santos</strong> — coluna de fã, complementar ao canal. Sem afiliação com o Santos FC.</p>
+    <p class="colofao"><span id="ano"></span> · Automático via RSS · <a href="feed.xml">RSS</a></p>
   </div>
 </footer>
 <script src="assets/js/app.js" defer></script>
-<script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+<script>
+document.getElementById('ano').textContent = new Date().getFullYear();
+try { document.getElementById('hoje').textContent = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}); } catch(e) {}
+</script>
 </body>
 </html>

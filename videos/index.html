@@ -2,27 +2,44 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vídeos — Eu Vim de Santos</title>
-<meta name="description" content="Todos os vídeos do canal Eu Vim de Santos: táticas, comentários, notícias, entrevistas, lives e shorts.">
+<title>Arquivo — Eu Vim de Santos</title>
+<meta name="description" content="O arquivo da coluna Eu Vim de Santos: táticas, comentários, notícias, entrevistas, lives e shorts.">
 <meta name="evs-depth" content="../">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-<header class="topo"><div class="wrap topo-in">
-<a class="brand" href="../"><img src="../assets/img/logo.svg" width="40" height="40" alt=""><span class="brand-tx"><strong>EU VIM DE</strong><strong>SANTOS</strong><small>Por Felipe Noronha</small></span></a>
-<nav aria-label="Principal"><a href="../">Início</a><a href="./" aria-current="page">Vídeos</a><a href="../sobre/">Sobre</a></nav>
-<a class="btn-inscrever" href="https://www.youtube.com/@EuVimdeSantos?sub_confirmation=1" target="_blank" rel="noopener">Inscrever-se</a>
+<header class="masthead"><div class="wrap masthead-in">
+<a class="marca" href="../"><img src="../assets/img/logo.svg" width="34" height="34" alt=""><span class="marca-nome"><strong>EU VIM DE SANTOS</strong><em>por Felipe Noronha</em></span></a>
+<nav class="menu" aria-label="Principal"><a href="../">Hoje</a><a href="./" aria-current="page">Arquivo</a><a href="../sobre/">Sobre</a></nav>
+<a class="assinar" href="https://www.youtube.com/@EuVimdeSantos?sub_confirmation=1" target="_blank" rel="noopener">Assinar</a>
 </div></header>
-<main class="wrap" style="padding:22px 18px">
-<h1>Vídeos</h1>
-<p class="meta" id="count">Carregando…</p>
-<p><input class="busca" id="q" type="search" placeholder="Buscar: ex. Arthur, Rodinei, Gabigol, Neymar…" aria-label="Buscar vídeos"></p>
-<p><label>Categoria: <select id="fcat"><option value="all">Todas</option><option value="taticas">Táticas</option><option value="comentarios">Comentários</option><option value="noticias">Notícias</option><option value="entrevistas">Entrevistas</option><option value="lives">Lives</option><option value="shorts">Shorts</option></select></label>
-<button data-chip="taticas">Táticas</button> <button data-chip="noticias">Notícias</button> <button data-chip="shorts">Shorts</button></p>
-<div class="grade" id="grade-all"></div>
+<main>
+<div class="arquivo-h">
+  <p class="kicker">Arquivo da coluna</p>
+  <h1>Tudo que saiu do canal.</h1>
+  <p class="lede" id="count">Carregando…</p>
+</div>
+<div class="busca-linha">
+  <input class="busca" id="q" type="search" placeholder="Buscar no arquivo…" aria-label="Buscar vídeos">
+  <div class="filtros-linha">
+    <div class="tabs" role="group" aria-label="Filtrar por editoria">
+      <button data-chip="all" class="on">Tudo</button>
+      <button data-chip="taticas">Táticas</button>
+      <button data-chip="comentarios">Comentários</button>
+      <button data-chip="noticias">Notícias</button>
+      <button data-chip="entrevistas">Entrevistas</button>
+      <button data-chip="lives">Lives</button>
+      <button data-chip="shorts">Shorts</button>
+    </div>
+    <label style="color:var(--mut);font-size:.82rem">Editoria <select id="fcat"><option value="all">Todas</option><option value="taticas">Táticas</option><option value="comentarios">Comentários</option><option value="noticias">Notícias</option><option value="entrevistas">Entrevistas</option><option value="lives">Lives</option><option value="shorts">Shorts</option></select></label>
+  </div>
+</div>
+<section class="secao" style="padding-top:10px">
+  <ol class="indice" id="grade-all"></ol>
+</section>
 </main>
-<footer><div class="wrap foot"><p><a href="../">← Início</a> · <a href="https://www.youtube.com/@EuVimdeSantos" target="_blank" rel="noopener">YouTube</a></p></div></footer>
+<footer><div class="foot"><p><a href="../">← Hoje</a> · <a href="https://www.youtube.com/@EuVimdeSantos" target="_blank" rel="noopener">YouTube</a></p><p class="colofao">Arquivo automático via RSS</p></div></footer>
 <script src="../assets/js/app.js" defer></script>
 </body>
 </html>
