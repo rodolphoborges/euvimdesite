@@ -21,6 +21,7 @@ jobs:
       - run: node scripts/build-feed.mjs
         env:
           SITE_URL: https://rodolphoborges.github.io/euvimdesite
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
       - name: commit se mudou
         run: |
           git config user.name "evs-bot"

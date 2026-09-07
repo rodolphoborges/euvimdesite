@@ -22,6 +22,49 @@ function pick(feed, tag) {
 }
 function unesc(s){ return s.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'"); }
 function escH(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const YT_KEY = process.env.YT_API_KEY || '';
+function fmtCompact(n){ try { return new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(Number(n)); } catch { return String(n); } }
+function fmtDur(iso){
+  const m = String(iso||'').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if(!m || (!m[1] && !m[2] && !m[3])) return '';
+  const p = n => String(n).padStart(2,'0');
+  const h = +m[1]||0, mi = +m[2]||0, s = +m[3]||0;
+  return h ? `${h}:${p(mi)}:${p(s)}` : `${mi}:${p(s)}`;
+}
+// Enriquece views/likes/comments/duração via YouTube Data API (build-time, chave no Secrets).
+// Sem chave, mantém só views do RSS — nunca quebra o build.
+async function enrich(videos){
+  if(!YT_KEY) return false;
+  try {
+    const ids = videos.map(v=>v.id);
+    for(let i=0;i<ids.length;i+=50){
+      const u = `https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${ids.slice(i,i+50).join(',')}&key=${YT_KEY}`;
+      const r = await fetch(u);
+      if(!r.ok) throw new Error('yt api ' + r.status);
+      const j = await r.json();
+      const byId = new Map((j.items||[]).map(it=>[it.id,it]));
+      for(const v of videos){
+        const it = byId.get(v.id); if(!it) continue;
+        const st = it.statistics || {};
+        if(st.viewCount) v.views = st.viewCount;
+        if(st.likeCount) v.likes = st.likeCount;
+        if(st.commentCount) v.comments = st.commentCount;
+        const d = fmtDur(it.contentDetails && it.contentDetails.duration);
+        if(d) v.duration = d;
+      }
+    }
+    return true;
+  } catch(e){ console.log('enrich skip:', e.message); return false; }
+}
+function statsHtml(v){
+  const items = [];
+  if(v.views) items.push(`<div><b>${fmtCompact(v.views)}</b><span>visualizações</span></div>`);
+  if(v.likes) items.push(`<div><b>${fmtCompact(v.likes)}</b><span>curtidas</span></div>`);
+  if(v.comments) items.push(`<div><b>${fmtCompact(v.comments)}</b><span>comentários</span></div>`);
+  if(v.duration) items.push(`<div><b>${v.duration}</b><span>duração</span></div>`);
+  if(!items.length) return '';
+  return `<div class="stats" data-dyn="stats">${items.join('')}</div>`;
+}
 
 const xml = await (await fetch(RSS, {headers:{'user-agent':'EVS-site/1.0'}})).text();
 const entries = xml.split('<entry>').slice(1);
@@ -44,6 +87,7 @@ try { prev = JSON.parse(readFileSync('data/videos.json','utf8')); } catch {}
 const map = new Map(prev.videos.map(v=>[v.id,v]));
 for (const v of fresh) map.set(v.id, {...(map.get(v.id)||{}), ...v});
 const videos = [...map.values()].sort((a,b)=> new Date(b.published)-new Date(a.published)).slice(0,100);
+const enriched = await enrich(videos);
 const updated = new Date().toISOString();
 writeFileSync('data/videos.json', JSON.stringify({channelId:CHANNEL_ID, channelUrl:CHANNEL_URL, updated, videos}, null, 0));
 
@@ -62,6 +106,7 @@ for (const v of videos.slice(0,50)) {
     .replaceAll('__THUMB__', v.thumb)
     .replaceAll('__URL__', v.url)
     .replaceAll('__CAT__', v.cat)
+    .replaceAll('__STATS__', statsHtml(v))
     .replaceAll('__NEXT__', rel.map(r=>`<article class="card"><a class="thumb" href="../v/${r.id}.html"><img loading="lazy" src="${r.thumb}" alt=""></a><div class="corpo"><h3><a href="../v/${r.id}.html">${escH(r.title)}</a></h3></div></article>`).join(''));
   writeFileSync(`v/${v.id}.html`, html);
 }
@@ -71,4 +116,4 @@ const urls = ['', 'videos/', 'sobre/', ...videos.filter(v=>v.cat!=='shorts').sli
 writeFileSync('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(u=>`<url><loc>${SITE}/${u}</loc></url>`).join('')}</urlset>`);
 // feed espelho
 writeFileSync('feed.xml', `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Eu Vim de Santos — site</title><link>${SITE}/</link><description>Espelho leve dos vídeos do canal.</description>${videos.slice(0,20).map(v=>`<item><title>${escH(v.title)}</title><link>${SITE}/v/${v.id}.html</link><pubDate>${new Date(v.published).toUTCString()}</pubDate><guid>${SITE}/v/${v.id}.html</guid></item>`).join('')}</channel></rss>`);
-console.log(`OK: ${videos.length} vídeos, updated ${updated}`);
+console.log(`OK: ${videos.length} vídeos, enriched=${enriched}, updated ${updated}`);

@@ -8,6 +8,10 @@ Site estático vanilla (HTML+CSS+JS puro) para consumir o canal https://www.yout
 - Script gera: `data/videos.json` (merge, máx 100), `v/[id].html` (SEO por vídeo), `sitemap.xml`, `feed.xml`. Commita só se mudou.
 - Site lê `data/videos.json` e renderiza com busca/filtro client-side. Nenhum vídeo hospedado aqui.
 
+## Estatísticas (views, curtidas, comentários, duração)
+- Sem chave: o build usa só o RSS (traz views) e a ficha mostra o que houver. Nada quebra.
+- Com chave: crie uma API key do **YouTube Data API v3** (Google Cloud, gratuita; o consumo aqui é ~3 chamadas/dia) e cadastre como secret `YT_API_KEY` em Settings > Secrets > Actions. Os workflows já repassam como env e o script enriquece `data/videos.json` + páginas em build-time. A chave nunca vai para o navegador.
+
 ## Rodar local
 ```powershell
 python -m http.server 8000

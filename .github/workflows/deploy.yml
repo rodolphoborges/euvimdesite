@@ -23,6 +23,7 @@ jobs:
       - run: node scripts/build-feed.mjs || echo "mantem feed atual"
         env:
           SITE_URL: https://rodolphoborges.github.io/euvimdesite
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
       - uses: actions/configure-pages@v5
         with:
           enablement: true

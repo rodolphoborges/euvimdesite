@@ -101,7 +101,53 @@
 
   if(isHome) home();
   listing();
-  // detalhe v/[id]: usa meta evs-id para embed
-  const det = document.getElementById('player');
-  if(det && det.dataset.id) liteEmbed(det, det.dataset.id, det.dataset.title || 'Vídeo');
+  detail();
+  function detail(){
+    const scope = document.querySelector('[data-video-id]');
+    const det = document.getElementById('player');
+    if(det && det.dataset.id) liteEmbed(det, det.dataset.id, det.dataset.title || 'Vídeo');
+    if(!scope) return;
+    const id = scope.dataset.videoId;
+    const cp = document.getElementById('copiar');
+    if(cp) cp.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(location.href); cp.textContent = 'Link copiado ✓'; }
+      catch { cp.textContent = location.href; }
+      setTimeout(()=>cp.textContent='Copiar link', 2000);
+    });
+    // hidrata com o feed mais fresco (views/data/desc podem ter mudado desde o build)
+    load().then(data => {
+      const v = (data.videos||[]).find(x=>x.id===id);
+      if(!v) return;
+      const d = document.querySelector('[data-dyn="date"]');
+      if(d) d.textContent = fmt(v.published);
+      const m = document.querySelector('[data-dyn="meta"]');
+      if(m) m.innerHTML = `${fmt(v.published)} · ${esc(v.cat)}${v.views ? ' · ' + Number(v.views).toLocaleString('pt-BR') + ' views' : ''}`;
+      const vd = document.querySelector('[data-dyn="views-dot"]');
+      if(vd && v.views) vd.textContent = '· ' + Number(v.views).toLocaleString('pt-BR') + ' views';
+      const ds = document.querySelector('[data-dyn="desc"]');
+      if(ds && v.desc) ds.textContent = v.desc;
+      // ficha de estatísticas: reconstrói a partir do JSON mais fresco
+      const statItems = [];
+      const comp = n => { try { return new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(Number(n)); } catch { return n; } };
+      if(v.views) statItems.push(`<div><b>${comp(v.views)}</b><span>visualizações</span></div>`);
+      if(v.likes) statItems.push(`<div><b>${comp(v.likes)}</b><span>curtidas</span></div>`);
+      if(v.comments) statItems.push(`<div><b>${comp(v.comments)}</b><span>comentários</span></div>`);
+      if(v.duration) statItems.push(`<div><b>${esc(v.duration)}</b><span>duração</span></div>`);
+      let st = document.querySelector('[data-dyn="stats"]');
+      if(statItems.length && !st){
+        st = document.createElement('div');
+        st.className = 'stats'; st.setAttribute('data-dyn','stats');
+        const bar = scope.querySelector('.video-bar');
+        bar ? bar.before(st) : scope.append(st);
+      }
+      if(st && statItems.length) st.innerHTML = statItems.join('');
+      // continuar assistindo: mesma categoria primeiro, depois recentes, sem o atual
+      const rail = document.getElementById('cont-rail');
+      if(rail){
+        const same = data.videos.filter(x=>x.id!==id && x.cat===v.cat && x.cat!=='shorts');
+        const rest = data.videos.filter(x=>x.id!==id && x.cat!==v.cat && x.cat!=='shorts');
+        rail.innerHTML = [...same, ...rest].slice(0,6).map(card).join('');
+      }
+    }).catch(()=>{});
+  }
 })();

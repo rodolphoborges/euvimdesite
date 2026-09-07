@@ -19,17 +19,45 @@
 <nav><a href="../">Início</a><a href="../videos/">Vídeos</a><a href="../sobre/">Sobre</a></nav>
 <a class="btn-inscrever" href="https://www.youtube.com/@EuVimdeSantos?sub_confirmation=1" target="_blank" rel="noopener">Inscrever-se</a>
 </div></header>
-<main class="wrap detalhe">
-<article>
-<p class="meta">__DATE_BR__ · __CAT__ · <a href="__URL__" target="_blank" rel="noopener">Ver no YouTube</a></p>
-<h1>__TITLE__</h1>
-<div id="player" data-id="__ID__" data-title="__TITLE__"></div>
-<p class="desc">__DESC__</p>
-<p><a class="btn primario" href="__URL__" target="_blank" rel="noopener">Assistir no YouTube</a> <a class="btn" href="../videos/">← Todos os vídeos</a></p>
-</article>
-<aside><h2>Próximos</h2><div class="grade" style="grid-template-columns:1fr">__NEXT__</div></aside>
+<main class="foco" data-video-id="__ID__">
+  <div class="wrap">
+    <p class="voltar"><a href="../videos/">← Todos os vídeos</a></p>
+    <p class="video-kicker"><span class="chip-cat">__CAT__</span><span data-dyn="date">__DATE_BR__</span><span data-dyn="views-dot"></span></p>
+    <h1 class="video-titulo">__TITLE__</h1>
+  </div>
+  <div class="wrap player-shell">
+    <div id="player" data-id="__ID__" data-title="__TITLE__"></div>
+  </div>
+  <div class="wrap foco-in">
+    __STATS__
+    <div class="video-bar">
+      <div class="video-meta" data-dyn="meta">__DATE_BR__ · __CAT__<span data-dyn="views"></span></div>
+      <div class="share">
+        <button class="btn mini" id="copiar" type="button">Copiar link</button>
+        <a class="btn mini" id="share-wa" href="https://wa.me/?text=__TITLE__%20__URL__" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn mini primario" href="__URL__" target="_blank" rel="noopener">Assistir no YouTube</a>
+      </div>
+    </div>
+    <details class="video-desc" open>
+      <summary>Sobre este vídeo</summary>
+      <p class="desc" data-dyn="desc">__DESC__</p>
+      <p><a href="__URL__" target="_blank" rel="noopener">Abrir descrição completa no YouTube →</a></p>
+    </details>
+    <section class="canal-card">
+      <img src="../assets/img/logo.svg" width="48" height="48" alt="">
+      <div><strong>Eu Vim de Santos</strong><p>Por Felipe Noronha · Táticas, comentários e notícias do Santos FC.</p></div>
+      <div class="canal-cta">
+        <a class="btn mini primario" href="https://www.youtube.com/@EuVimdeSantos?sub_confirmation=1" target="_blank" rel="noopener">Inscrever-se</a>
+        <a class="btn mini" href="https://www.youtube.com/channel/UC2yJDeDFcv1cAHA0BgfJ9ww/join" target="_blank" rel="noopener">Seja membro</a>
+      </div>
+    </section>
+    <section class="cont">
+      <div class="secao-h"><div><p class="eyebrow">Continue assistindo</p><h2>Mais do canal</h2></div><a href="../videos/">Ver todos →</a></div>
+      <div class="grade" id="cont-rail">__NEXT__</div>
+    </section>
+  </div>
 </main>
-<footer><div class="wrap foot"><p>Eu Vim de Santos — página complementar. Vídeo hospedado no YouTube.</p></div></footer>
+<footer><div class="wrap foot"><p>Eu Vim de Santos — página complementar. Vídeo hospedado no YouTube.</p><p><a href="../">Início</a> · <a href="../videos/">Vídeos</a></p></div></footer>
 <script src="../assets/js/app.js" defer></script>
 </body>
 </html>
