@@ -45,7 +45,7 @@
   function liteEmbed(el, id, title){
     el.innerHTML = `<button class="lite" aria-label="Assistir: ${esc(title)}">
       <img loading="lazy" src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="">
-      <span aria-hidden="true">▶</span><b>${esc(title)}</b></button>`;
+      <i aria-hidden="true"></i><b>${esc(title)}</b></button>`;
     el.querySelector('button').addEventListener('click', () => {
       el.innerHTML = `<iframe width="100%" height="100%" style="aspect-ratio:16/9;border:0" src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${esc(title)}" allow="accelerometer;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>`;
     });
