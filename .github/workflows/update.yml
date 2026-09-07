@@ -1,0 +1,30 @@
+name: update-feed
+on:
+  schedule:
+    - cron: '17 12 * * *'
+    - cron: '17 18 * * *'
+    - cron: '17 1 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: evs-feed
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/build-feed.mjs
+        env:
+          SITE_URL: https://rodolphoborges.github.io/euvimdesite
+      - name: commit se mudou
+        run: |
+          git config user.name "evs-bot"
+          git config user.email "evs-bot@users.noreply.github.com"
+          git add data/videos.json sitemap.xml feed.xml v/
+          git diff --cached --quiet || git commit -m "auto: atualiza feed $(date -u +%F)"
+          git push

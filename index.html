@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eu Vim de Santos — Táticas, Comentários e Notícias</title>
+<meta name="description" content="Site complementar ao canal Eu Vim de Santos, por Felipe Noronha. Análises táticas, comentários, notícias, entrevistas e shorts sobre o Santos FC, atualizado automaticamente pelo YouTube.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#000066">
+<meta property="og:title" content="Eu Vim de Santos">
+<meta property="og:description" content="Táticas, comentários e notícias sobre o Santos FC. Por Felipe Noronha.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://i2.ytimg.com/vi/eq2cPrAdBm0/hqdefault.jpg">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo">
+  <div class="wrap topo-in">
+    <a class="brand" href="./" aria-label="Eu Vim de Santos - início">
+      <img src="assets/img/logo.svg" width="44" height="44" alt="Escudo branco com coroa dourada">
+      <span class="brand-tx"><strong>EU VIM DE</strong><strong>SANTOS</strong><small>Por Felipe Noronha</small></span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="./" aria-current="page">Início</a>
+      <a href="videos/">Vídeos</a>
+      <a href="videos/?cat=taticas">Táticas</a>
+      <a href="videos/?cat=noticias">Notícias</a>
+      <a href="videos/?cat=entrevistas">Entrevistas</a>
+      <a href="sobre/">Sobre</a>
+    </nav>
+    <a class="btn-inscrever" href="https://www.youtube.com/@EuVimdeSantos?sub_confirmation=1" target="_blank" rel="noopener">Inscrever-se</a>
+  </div>
+</header>
+
+<main id="conteudo">
+<section class="hero wrap">
+  <div class="hero-tx">
+    <p class="pills"><span>Táticas</span><span>Comentários</span><span>Notícias</span></p>
+    <h1>Consuma o <em>Eu Vim de Santos</em> sem algoritmo no caminho.</h1>
+    <p>Site leve e complementar ao canal. Todo vídeo novo do YouTube aparece aqui sozinho, via atualização automática.</p>
+    <div class="hero-cta">
+      <a class="btn primario" href="videos/">Ver últimos vídeos</a>
+      <a class="btn" href="https://www.youtube.com/@EuVimdeSantos" target="_blank" rel="noopener">Abrir no YouTube</a>
+    </div>
+    <p class="meta" id="last-update">Atualizando…</p>
+  </div>
+  <div class="hero-video" id="destaque">
+    <!-- preenchido via JS: vídeo mais recente com fachada leve -->
+    <noscript><a href="https://www.youtube.com/@EuVimdeSantos">Ver canal no YouTube</a></noscript>
+  </div>
+</section>
+
+<section class="wrap secao">
+  <div class="secao-h">
+    <h2>Últimos vídeos</h2>
+    <a href="videos/">Ver todos →</a>
+  </div>
+  <div class="filtros" role="group" aria-label="Filtrar por categoria">
+    <button data-cat="all" class="on">Todos</button>
+    <button data-cat="taticas">Táticas</button>
+    <button data-cat="comentarios">Comentários</button>
+    <button data-cat="noticias">Notícias</button>
+    <button data-cat="entrevistas">Entrevistas</button>
+    <button data-cat="lives">Lives</button>
+  </div>
+  <div class="grade" id="grade-home"></div>
+</section>
+
+<section class="wrap secao">
+  <div class="secao-h">
+    <h2>Shorts</h2>
+    <a href="videos/?cat=shorts">Ver shorts →</a>
+  </div>
+  <div class="grade shorts" id="grade-shorts"></div>
+</section>
+
+<section class="wrap sobre-mini">
+  <div>
+    <h2>Por Felipe Noronha <span class="handle">@fgnoronha</span></h2>
+    <p>Jornalista. Comentários e análises sobre o Santos (quase) todo dia. Análises táticas com imagem, Live do Trio com Edu e Gabi, e o quadro Eu Vim de Entrevista.</p>
+    <p><a href="sobre/">Conhecer + apoiar →</a></p>
+  </div>
+  <ul class="links">
+    <li><a href="https://www.youtube.com/channel/UC2yJDeDFcv1cAHA0BgfJ9ww/join" target="_blank" rel="noopener">Seja Membro EVS</a></li>
+    <li><a href="https://www.youtube.com/@Noronhismo" target="_blank" rel="noopener">2º canal: Noronhismo</a></li>
+    <li><a href="https://www.instagram.com/fgnoronha" target="_blank" rel="noopener">Instagram @fgnoronha</a></li>
+  </ul>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p><strong>Eu Vim de Santos</strong> — site de fãs complementar ao canal. Não afiliado ao Santos FC / YouTube.</p>
+    <p><a href="https://www.youtube.com/@EuVimdeSantos" target="_blank" rel="noopener">YouTube</a> · <a href="feed.xml">RSS do site</a> · <a href="sobre/">Sobre</a> · <span id="ano"></span></p>
+  </div>
+</footer>
+<script src="assets/js/app.js" defer></script>
+<script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+</body>
+</html>
