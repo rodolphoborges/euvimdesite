@@ -84,11 +84,22 @@ const fresh = entries.map(e => {
 
 let prev = { videos: [] };
 try { prev = JSON.parse(readFileSync('data/videos.json','utf8')); } catch {}
+if (!Array.isArray(prev.videos)) prev.videos = [];
 const map = new Map(prev.videos.map(v=>[v.id,v]));
 for (const v of fresh) map.set(v.id, {...(map.get(v.id)||{}), ...v});
 const videos = [...map.values()].sort((a,b)=> new Date(b.published)-new Date(a.published)).slice(0,100);
 const enriched = await enrich(videos);
-const updated = new Date().toISOString();
+// Evita commit vazio: se a lista de vídeos não mudou, mantém o `updated`
+// anterior para que o arquivo fique byte-idêntico e `git diff --quiet` funcione.
+const prevVideosJson = JSON.stringify(prev.videos || []);
+const nextVideosJson = JSON.stringify(videos);
+let updated;
+let changed = prevVideosJson !== nextVideosJson;
+if (!changed && prev.updated) {
+  updated = prev.updated;
+} else {
+  updated = new Date().toISOString();
+}
 writeFileSync('data/videos.json', JSON.stringify({channelId:CHANNEL_ID, channelUrl:CHANNEL_URL, updated, videos}, null, 0));
 
 // páginas v/[id].html
@@ -116,4 +127,4 @@ const urls = ['', 'videos/', 'sobre/', ...videos.filter(v=>v.cat!=='shorts').sli
 writeFileSync('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(u=>`<url><loc>${SITE}/${u}</loc></url>`).join('')}</urlset>`);
 // feed espelho
 writeFileSync('feed.xml', `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Eu Vim de Santos — site</title><link>${SITE}/</link><description>Espelho leve dos vídeos do canal.</description>${videos.slice(0,20).map(v=>`<item><title>${escH(v.title)}</title><link>${SITE}/v/${v.id}.html</link><pubDate>${new Date(v.published).toUTCString()}</pubDate><guid>${SITE}/v/${v.id}.html</guid></item>`).join('')}</channel></rss>`);
-console.log(`OK: ${videos.length} vídeos, enriched=${enriched}, updated ${updated}`);
+console.log(`OK: ${videos.length} vídeos, enriched=${enriched}, changed=${changed}, updated ${updated}`);
