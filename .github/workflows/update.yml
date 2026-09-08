@@ -22,11 +22,12 @@ jobs:
         env:
           SITE_URL: https://rodolphoborges.github.io/euvimdesite
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          BACKFILL_PAGES: '10'
       - name: commit se mudou
         run: |
           git config user.name "evs-bot"
           git config user.email "evs-bot@users.noreply.github.com"
-          git add data/videos.json sitemap.xml feed.xml v/
+          git add data/videos.json data/backfill.json sitemap.xml feed.xml v/
           # Defesa extra: se só o campo `updated` mudou, descarta o diff de
           # data/videos.json para não gerar commit vazio (o script já preserva
           # `updated` quando `videos` está igual, isto cobre regressões).

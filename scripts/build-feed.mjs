@@ -1,10 +1,19 @@
-// Gera data/videos.json + v/*.html + sitemap.xml + feed.xml a partir do RSS do YouTube. Zero deps.
+// Gera data/videos.json + v/*.html + sitemap.xml + feed.xml a partir do RSS do
+// YouTube + backfill incremental do acervo via Data API. Zero deps.
+// O RSS só traz os ~15 mais recentes; o backfill percorre a playlist de uploads
+// (50 itens/página) poucas páginas por execução, persistindo o pageToken em
+// data/backfill.json — o acervo cresce pouco a pouco até cobrir o canal inteiro.
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 
 const CHANNEL_ID = 'UC2yJDeDFcv1cAHA0BgfJ9ww';
 const CHANNEL_URL = 'https://www.youtube.com/@EuVimdeSantos';
 const SITE = process.env.SITE_URL || 'https://rodolphoborges.github.io/euvimdesite';
 const RSS = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+const UPLOADS_PLAYLIST = 'UU' + CHANNEL_ID.slice(2);
+const BACKFILL_STATE = 'data/backfill.json';
+// Páginas de 50 itens por execução (1 unidade de cota cada). 3 execuções/dia
+// indexam até ~1500 vídeos/dia; zera com BACKFILL_PAGES=0 (ex.: deploy).
+const BACKFILL_PAGES = Math.max(0, parseInt(process.env.BACKFILL_PAGES || '10', 10) || 0);
 
 function catOf(title, url) {
   const t = title.toLowerCase();
@@ -56,6 +65,60 @@ async function enrich(videos){
     return true;
   } catch(e){ console.log('enrich skip:', e.message); return false; }
 }
+function loadBackfillState(){
+  try {
+    const s = JSON.parse(readFileSync(BACKFILL_STATE,'utf8'));
+    if (s && typeof s === 'object') return { nextPageToken: s.nextPageToken || null, done: !!s.done, indexed: s.indexed || 0 };
+  } catch {}
+  return { nextPageToken: null, done: false, indexed: 0 };
+}
+// Varre a playlist de uploads rumo ao passado. Quando concluído, confere só a
+// cabeça (1 página) para captar vídeos novos. Sem chave ou com BACKFILL_PAGES=0, pula.
+async function backfill(){
+  const state = loadBackfillState();
+  if(!YT_KEY || BACKFILL_PAGES<=0) return { items: [], state, ran: false };
+  const pages = state.done ? 1 : BACKFILL_PAGES;
+  const items = [];
+  let token = state.done ? null : state.nextPageToken;
+  try {
+    for(let p=0;p<pages;p++){
+      const u = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=${UPLOADS_PLAYLIST}${token?`&pageToken=${token}`:''}&key=${YT_KEY}`;
+      const r = await fetch(u);
+      if(!r.ok) throw new Error('playlist api ' + r.status);
+      const j = await r.json();
+      for(const it of (j.items||[])){
+        const id = (it.contentDetails && it.contentDetails.videoId) || (it.snippet && it.snippet.resourceId && it.snippet.resourceId.videoId);
+        if(!id) continue;
+        const title = String((it.snippet && it.snippet.title) || '').slice(0,120);
+        if(!title || title==='Deleted video' || title==='Private video') continue;
+        const url = `https://www.youtube.com/watch?v=${id}`;
+        const published = (it.snippet && it.snippet.publishedAt) || new Date().toISOString();
+        const th = it.snippet && it.snippet.thumbnails;
+        const best = th && (th.medium || th.high || th.default);
+        const thumb = (best && best.url) || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+        const desc = String((it.snippet && it.snippet.description) || '').slice(0,500);
+        items.push({ id, title, url, published, thumb, views: '', cat: catOf(title, url), desc });
+      }
+      token = j.nextPageToken || null;
+      if(!token){ state.done = true; break; }
+      if(state.done) break;
+    }
+  } catch(e){ console.log('backfill skip:', e.message); return { items, state, ran: items.length>0 }; }
+  state.nextPageToken = state.done ? null : token;
+  state.indexed += items.length;
+  try { writeFileSync(BACKFILL_STATE, JSON.stringify({ nextPageToken: state.nextPageToken, done: state.done, indexed: state.indexed, updatedAt: new Date().toISOString() })); } catch {}
+  return { items, state, ran: true };
+}
+function mergeInto(map, list){
+  for(const v of list){
+    const old = map.get(v.id);
+    if(!old){ map.set(v.id, v); continue; }
+    const merged = { ...old, ...v };
+    if(!v.views) merged.views = old.views || '';
+    if(!v.desc) merged.desc = old.desc || '';
+    map.set(v.id, merged);
+  }
+}
 function statsHtml(v){
   const items = [];
   if(v.views) items.push(`<div><b>${fmtCompact(v.views)}</b><span>visualizações</span></div>`);
@@ -86,9 +149,18 @@ let prev = { videos: [] };
 try { prev = JSON.parse(readFileSync('data/videos.json','utf8')); } catch {}
 if (!Array.isArray(prev.videos)) prev.videos = [];
 const map = new Map(prev.videos.map(v=>[v.id,v]));
-for (const v of fresh) map.set(v.id, {...(map.get(v.id)||{}), ...v});
-const videos = [...map.values()].sort((a,b)=> new Date(b.published)-new Date(a.published)).slice(0,100);
-const enriched = await enrich(videos);
+// 1) backfill do acervo (poucas páginas/execução); 2) RSS por cima (traz os
+// mais recentes com views e corrige URL/cat de shorts recentes).
+const bf = await backfill();
+mergeInto(map, bf.items);
+mergeInto(map, fresh);
+// Sem teto: o acervo completo vive em videos.json, ordenado do novo ao antigo.
+const videos = [...map.values()].sort((a,b)=> new Date(b.published)-new Date(a.published));
+// Enriquecimento com cota limitada: 50 mais recentes + nunca-enriquecidos
+// (views de arquivo ficam levemente defasadas — aceitável para o acervo).
+const recentIds = new Set(videos.slice(0,50).map(v=>v.id));
+const toEnrich = videos.filter(v=>recentIds.has(v.id) || !v.likes || !v.duration);
+const enriched = await enrich(toEnrich);
 // Evita commit vazio: se a lista de vídeos não mudou, mantém o `updated`
 // anterior para que o arquivo fique byte-idêntico e `git diff --quiet` funcione.
 const prevVideosJson = JSON.stringify(prev.videos || []);
@@ -102,10 +174,10 @@ if (!changed && prev.updated) {
 }
 writeFileSync('data/videos.json', JSON.stringify({channelId:CHANNEL_ID, channelUrl:CHANNEL_URL, updated, videos}, null, 0));
 
-// páginas v/[id].html
+// páginas v/[id].html — uma por vídeo não-short do acervo
 mkdirSync('v',{recursive:true});
 const tpl = readFileSync('templates/video.html','utf8');
-for (const v of videos.slice(0,50)) {
+for (const v of videos) {
   if (v.cat==='shorts') continue;
   const rel = videos.filter(x=>x.cat!=='shorts' && x.id!==v.id).slice(0,6);
   const html = tpl
@@ -122,9 +194,9 @@ for (const v of videos.slice(0,50)) {
   writeFileSync(`v/${v.id}.html`, html);
 }
 
-// sitemap
-const urls = ['', 'videos/', 'sobre/', ...videos.filter(v=>v.cat!=='shorts').slice(0,50).map(v=>`v/${v.id}.html`)];
+// sitemap — acervo completo (não-shorts)
+const urls = ['', 'videos/', 'sobre/', ...videos.filter(v=>v.cat!=='shorts').map(v=>`v/${v.id}.html`)];
 writeFileSync('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(u=>`<url><loc>${SITE}/${u}</loc></url>`).join('')}</urlset>`);
 // feed espelho
 writeFileSync('feed.xml', `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Eu Vim de Santos — site</title><link>${SITE}/</link><description>Espelho leve dos vídeos do canal.</description>${videos.slice(0,20).map(v=>`<item><title>${escH(v.title)}</title><link>${SITE}/v/${v.id}.html</link><pubDate>${new Date(v.published).toUTCString()}</pubDate><guid>${SITE}/v/${v.id}.html</guid></item>`).join('')}</channel></rss>`);
-console.log(`OK: ${videos.length} vídeos, enriched=${enriched}, changed=${changed}, updated ${updated}`);
+console.log(`OK: ${videos.length} vídeos (+${bf.items.length} backfill, done=${bf.state.done}), enriched=${enriched}, changed=${changed}, updated ${updated}`);
