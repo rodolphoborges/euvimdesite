@@ -1,7 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import Social from '../components/Social.astro';
 import { site, videos } from '../lib/data.mjs';
 import { href } from '../lib/format.mjs';
+
+const canalYT = (site.social?.canal || [])[0];
+const autorRedes = site.social?.autor || [];
 ---
 <Base title="Sobre" desc={`Sobre o ${site.name} e este site.`} nav="sobre">
   <div class="wrap page prose">
@@ -24,6 +28,13 @@ import { href } from '../lib/format.mjs';
       <a class="btn" href={site.membersUrl} target="_blank" rel="noopener">Seja membro</a>
       <a class="btn" href={href('canais/')}>Canais indicados</a>
     </p>
+    <h2>Acompanhe</h2>
+    <p>Vídeo novo quase todo dia no YouTube do canal; bastidores, opinião e dia a dia com o Felipe no Instagram e no X.</p>
+    <p>
+      {canalYT && <Social item={canalYT} btn gold />}
+      {autorRedes.map(s => <Social item={s} btn />)}
+    </p>
+    {site.social?.contato && <p>Contato comercial e pautas: <a href={`mailto:${site.social.contato}`}>{site.social.contato}</a></p>}
     <h2 id="remocao">Aviso legal e remoção</h2>
     <p>Site de fã, sem afiliação com o Santos FC, com o YouTube ou com o canal. Todos os vídeos, descrições e falas pertencem aos seus autores. Se você é titular de algum conteúdo e quer removê-lo, <a href={`${site.repoUrl}/issues/new`} rel="noopener">abra uma issue no repositório</a> e o conteúdo sai na próxima atualização.</p>
   </div>

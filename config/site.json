@@ -8,6 +8,16 @@
   "siteUrl": "https://rodolphoborges.github.io/euvimdesite",
   "repoUrl": "https://github.com/rodolphoborges/euvimdesite",
   "membersUrl": "https://www.youtube.com/channel/UC2yJDeDFcv1cAHA0BgfJ9ww/join",
+  "social": {
+    "canal": [
+      { "id": "youtube", "label": "YouTube", "handle": "@EuVimdeSantos", "url": "https://www.youtube.com/@EuVimdeSantos" }
+    ],
+    "autor": [
+      { "id": "instagram", "label": "Instagram", "handle": "@fgnoronha", "url": "https://www.instagram.com/fgnoronha" },
+      { "id": "x", "label": "X", "handle": "@fgnoronha", "url": "https://x.com/fgnoronha" }
+    ],
+    "contato": "blogeuvimdesantos@gmail.com"
+  },
   "pageSize": 48,
   "playlistCats": {
     "live do trio|ao vivo|lives?\b": "lives",

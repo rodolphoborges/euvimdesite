@@ -50,5 +50,7 @@ const pf = href('pagefind/pagefind.js');
   form.addEventListener('submit', e => { e.preventDefault(); run(input.value); });
   input.addEventListener('input', () => run(input.value));
   const q0 = new URLSearchParams(location.search).get('q');
-  if (q0) { input.value = q0; run(q0); } else input.focus();
+  if (q0) { input.value = q0; run(q0); }
+  // no celular o foco automático abre o teclado e empurra a página — só foca com mouse/teclado físico
+  else if (matchMedia('(hover: hover) and (pointer: fine)').matches) input.focus();
 </script>

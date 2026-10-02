@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Social from '../components/Social.astro';
 import { site, updated } from '../lib/data.mjs';
 import { href, fmtDate } from '../lib/format.mjs';
 
@@ -70,6 +71,20 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
       <button type="submit" aria-label="Buscar"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={icons.busca} /></svg></button>
     </form>
     <a class="btn-sub" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">Inscrever-se</a>
+    <details class="mnav">
+      <summary aria-label="Menu"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></summary>
+      <nav aria-label="Menu">
+        {links.map(([p, label, key]) => <a class="mlink" href={href(p)} aria-current={nav === key ? 'page' : undefined}>{label}</a>)}
+        <a class="btn btn-gold m-cta" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">Inscrever-se no canal</a>
+        <div class="m-soc">
+          <span>Acompanhe</span>
+          <div class="soc-row">
+            {(site.social?.canal || []).map(s => <Social item={s} />)}
+            {(site.social?.autor || []).map(s => <Social item={s} />)}
+          </div>
+        </div>
+      </nav>
+    </details>
   </div>
 </header>
 <main id="conteudo">
@@ -89,6 +104,18 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
       <a href={href('feed.xml')}>RSS</a>
       <a href={site.repoUrl} rel="noopener">Código-fonte</a>
     </nav>
+    <div class="foot-soc">
+      <div>
+        <h3>Eu Vim de Santos</h3>
+        <div class="soc-row">{(site.social?.canal || []).map(s => <Social item={s} />)}</div>
+        <small>{(site.social?.canal || []).map(s => s.handle).join(' · ')}</small>
+      </div>
+      <div>
+        <h3>Felipe Noronha</h3>
+        <div class="soc-row">{(site.social?.autor || []).map(s => <Social item={s} />)}</div>
+        <small>{(site.social?.autor || []).map(s => s.handle).join(' · ')}</small>
+      </div>
+    </div>
   </div>
   <p class="wrap foot-upd">Atualizado automaticamente · dados de {fmtDate(updated, { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
 </footer>
@@ -123,12 +150,40 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
     }
     const cp = t.closest<HTMLButtonElement>('[data-copy]');
     if (cp) {
-      navigator.clipboard?.writeText(cp.dataset.copy || location.href).then(() => {
-        const old = cp.textContent; cp.textContent = 'Copiado ✓';
+      const txt = cp.dataset.copy || location.href;
+      const done = (ok: boolean) => {
+        const old = cp.textContent;
+        cp.textContent = ok ? 'Copiado ✓' : 'Não copiou — tente de novo';
         setTimeout(() => (cp.textContent = old), 1800);
-      });
+      };
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(txt).then(() => done(true), () => done(false));
+      } else {
+        // fallback para navegadores sem Clipboard API (HTTP, webviews antigas)
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { done(document.execCommand('copy')); } catch { done(false); }
+        ta.remove();
+      }
     }
   });
+  // menu móvel: fecha ao clicar fora, com Escape ou ao trocar de estado
+  const mnav = document.querySelector<HTMLDetailsElement>('.mnav');
+  const msummary = mnav?.querySelector('summary');
+  if (mnav && msummary) {
+    msummary.setAttribute('aria-expanded', 'false');
+    mnav.addEventListener('toggle', () => msummary.setAttribute('aria-expanded', String(mnav.open)));
+    document.addEventListener('click', (e) => {
+      if (mnav.open && !mnav.contains(e.target as Node)) mnav.open = false;
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') mnav.open = false;
+    });
+  }
   if (matchMedia('(hover: hover) and (min-width: 861px)').matches) {
     document.querySelectorAll<HTMLElement>('.rail').forEach((rail) => {
       const track = rail.querySelector<HTMLElement>('.rail-track');
