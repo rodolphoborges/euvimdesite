@@ -15,6 +15,7 @@
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.5",
-    "pagefind": "^1.5.2"
+    "pagefind": "^1.5.2",
+    "qrcode": "^1.5.4"
   }
 }

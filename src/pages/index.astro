@@ -4,6 +4,8 @@ import Card from '../components/Card.astro';
 import ShortCard from '../components/ShortCard.astro';
 import Rail from '../components/Rail.astro';
 import Player from '../components/Player.astro';
+import Sponsor from '../components/Sponsor.astro';
+import { destaques } from '../lib/sponsors.mjs';
 import { videos, longs, shorts, canais, catList, CATS, transcribed, now } from '../lib/data.mjs';
 import { href, thumbHq, ytUrl, kicker, compact, fmtSecs, fmtDate } from '../lib/format.mjs';
 
@@ -35,6 +37,12 @@ const cats = catList.filter(c => c !== 'shorts').map(c => [c, rest.filter(v => v
   )}
   <div class="wrap">
     <Rail title="Mais recentes" link={href('videos/')}>{rest.slice(0, 16).map((v, i) => <Card v={v} eager={i < 4} />)}</Rail>
+    {destaques.length > 0 && (
+      <section class="rail sp-home" aria-label="Parceiros do canal">
+        <div class="rail-h"><h2>Parceiros do canal</h2><a href={href('parceiros/')}>Todos os cupons <span aria-hidden="true">›</span></a></div>
+        <div class="sp-row">{destaques.slice(0, 3).map(p => <Sponsor p={p} variant="mini" />)}</div>
+      </section>
+    )}
     {top.length >= 5 && <Rail title="Mais vistos do mês">{top.map(v => <Card v={v} />)}</Rail>}
     {cats.map(([c, list], i) => (
       <Fragment>

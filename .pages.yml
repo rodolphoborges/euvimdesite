@@ -1,0 +1,62 @@
+# Editor visual gratuito: https://app.pagescms.org (entre com a conta do GitHub e abra este repositório).
+# Cada alteração salva vira um commit e o site é republicado sozinho em ~1 minuto.
+media:
+  input: public/parceiros
+  output: /parceiros
+
+content:
+  - name: patrocinadores
+    label: Patrocinadores e cupons
+    type: file
+    path: config/patrocinadores.json
+    format: json
+    fields:
+      - name: janelaDias
+        label: Dias para considerar "citado recentemente"
+        type: number
+        default: 5
+      - name: patrocinadores
+        label: Patrocinadores
+        type: object
+        list: true
+        fields:
+          - { name: nome, label: Nome, type: string, required: true }
+          - { name: ativo, label: Ativo no site, type: boolean, default: true }
+          - { name: destaque, label: Destacar na página inicial, type: boolean, default: false }
+          - { name: chamada, label: Chamada curta (cards pequenos), type: string }
+          - { name: descricao, label: Descrição (página de parceiros), type: text }
+          - { name: cupom, label: Cupom, type: string }
+          - { name: desconto, label: Selo do desconto (ex. 20% OFF), type: string }
+          - { name: link, label: Link da oferta (vira QR code), type: string }
+          - { name: botao, label: Texto do botão, type: string, default: Ver oferta }
+          - { name: logo, label: Logo (quadrado), type: image }
+          - { name: cor, label: Cor da marca (ex. #ff4f9a), type: string }
+          - { name: validoAte, label: Válido até (some do site depois), type: date }
+          - name: dominios
+            label: Domínios dos links (para achar o parceiro nas descrições dos vídeos)
+            type: string
+            list: true
+
+  - name: canais
+    label: Canais indicados
+    type: file
+    path: config/canais.json
+    format: json
+    fields:
+      - name: canais
+        label: Canais
+        type: object
+        list: true
+        fields:
+          - { name: handle, label: "@handle do YouTube", type: string, required: true }
+          - { name: nota, label: Nota curta, type: string }
+
+  - name: overrides
+    label: Correção de categorias
+    type: file
+    path: config/overrides.json
+    format: json
+    fields:
+      - name: categorias
+        label: "Vídeo → categoria (taticas, comentarios, noticias, entrevistas, lives, shorts)"
+        type: object

@@ -3,6 +3,8 @@ import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import Rail from '../../components/Rail.astro';
 import Player from '../../components/Player.astro';
+import Sponsor from '../../components/Sponsor.astro';
+import { sponsorsOfVideo } from '../../lib/sponsors.mjs';
 import { videos, longs, site, CATS, transcript } from '../../lib/data.mjs';
 import { href, thumb, thumbHq, ytUrl, compact, fmtSecs, fmtDate } from '../../lib/format.mjs';
 import { esc } from '../../../scripts/lib/util.mjs';
@@ -58,6 +60,7 @@ const ld = {
   author: { '@type': 'Person', name: site.author },
   inLanguage: 'pt-BR',
 };
+const sps = [...(sponsorsOfVideo.get(v.id) || [])];
 const share = encodeURIComponent(`${v.title} ${pageUrl}`);
 ---
 <Base title={v.title} desc={(v.desc || v.title).split('\n')[0].slice(0, 160)} image={thumbHq(v.id)} ogType="video.other">
@@ -97,6 +100,12 @@ const share = encodeURIComponent(`${v.title} ${pageUrl}`);
         </nav>
       </div>
       <aside class="video-side">
+        {sps.length > 0 && (
+          <section class="sp-side" aria-label="Parceiros deste vídeo">
+            <h2>{sps.length > 1 ? 'Parceiros deste vídeo' : 'Parceiro deste vídeo'}</h2>
+            {sps.map(p => <Sponsor p={p} variant="mini" />)}
+          </section>
+        )}
         <h2>{related.length ? `Mais de ${CATS[v.cat]}` : 'Mais do canal'}</h2>
         <div class="side-list">{(related.length ? related : more).map(x => <Card v={x} />)}</div>
       </aside>

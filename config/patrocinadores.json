@@ -1,0 +1,50 @@
+{
+  "janelaDias": 5,
+  "patrocinadores": [
+    {
+      "nome": "Gocase",
+      "chamada": "Capinhas e acessórios oficiais do Santos",
+      "descricao": "Coleção oficial do Santos com desconto especial para quem vem do canal.",
+      "cupom": "EUVIMDESANTOS",
+      "desconto": "Desconto especial",
+      "link": "https://www.gocase.com.br/santos",
+      "botao": "Ver coleção do Santos",
+      "dominios": ["gocase.com.br"],
+      "logo": "",
+      "cor": "#ff4f9a",
+      "validoAte": "",
+      "destaque": true,
+      "ativo": true
+    },
+    {
+      "nome": "Gringo",
+      "chamada": "IPVA, multas e licenciamento em um app",
+      "descricao": "Resolva tudo do seu carro ou moto pelo Super App do Gringo. Com o cupom, 20% de desconto nas taxas de financiamento acima de 10x.",
+      "cupom": "SANTOS20",
+      "desconto": "20% nas taxas",
+      "link": "https://gringo.go.link/kUdF4",
+      "botao": "Baixar o app grátis",
+      "dominios": ["gringo.go.link", "gringo.com.vc"],
+      "logo": "",
+      "cor": "#7c4dff",
+      "validoAte": "",
+      "destaque": true,
+      "ativo": true
+    },
+    {
+      "nome": "Copos Neymar Jr",
+      "chamada": "Coleção oficial de copos do Neymar Jr",
+      "descricao": "Presente ideal para Dia das Crianças, aniversário e Natal.",
+      "cupom": "",
+      "desconto": "",
+      "link": "https://www.lojacopodoneymarjrofc.com.br?parceiro=9469",
+      "botao": "Comprar a coleção",
+      "dominios": ["lojacopodoneymarjrofc.com.br"],
+      "logo": "",
+      "cor": "#e0ab1f",
+      "validoAte": "",
+      "destaque": false,
+      "ativo": true
+    }
+  ]
+}
