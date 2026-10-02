@@ -308,8 +308,6 @@ button, input { font: inherit; color: inherit; }
 .sp-qr { margin: 0; text-align: center; }
 .sp-qr svg { width: 92px; height: 92px; border-radius: 8px; display: block; }
 .sp-qr figcaption { font-size: 10px; color: var(--tx3); margin-top: 4px; }
-.sp-vistos { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; color: var(--tx3); }
-.sp-vistos a { color: var(--tx2); text-decoration: underline; text-underline-offset: 2px; }
 .sp-mini { padding: 16px; gap: 12px; }
 .sp-mini h3 { font-size: 17px; }
 .sp-mini .sp-logo { width: 38px; height: 38px; }

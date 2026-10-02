@@ -2,7 +2,7 @@
 // Card de patrocinador. variant: "full" (página de parceiros, com QR) ou "mini" (home e vídeo).
 import { qr } from '../lib/sponsors.mjs';
 import { href } from '../lib/format.mjs';
-const { p, variant = 'full', showVideos = false } = Astro.props;
+const { p, variant = 'full' } = Astro.props;
 const svg = variant === 'full' ? await qr(p.link) : '';
 const logo = p.logo ? (/^https?:/.test(p.logo) ? p.logo : href(p.logo)) : '';
 const accent = /^#[0-9a-f]{6}$/i.test(p.cor || '') ? p.cor : '#e0ab1f';
@@ -30,7 +30,4 @@ const onAccent = 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.3 ? '#0b0b0f' : '#ffff
     {p.link && <a class="btn sp-btn" href={p.link} target="_blank" rel="sponsored noopener">{p.botao || 'Ver oferta'} <span aria-hidden="true">↗</span></a>}
     {svg && <figure class="sp-qr"><Fragment set:html={svg} /><figcaption>Aponte a câmera</figcaption></figure>}
   </div>
-  {showVideos && p.videos.length > 0 && (
-    <p class="sp-vistos">Citado em {p.videos.length} vídeo{p.videos.length > 1 ? 's' : ''} recente{p.videos.length > 1 ? 's' : ''}: {p.videos.slice(0, 3).map((v, i) => <Fragment>{i > 0 && ', '}<a href={href(`v/${v.id}/`)}>{v.title.length > 48 ? v.title.slice(0, 46) + '…' : v.title}</a></Fragment>)}</p>
-  )}
 </article>

@@ -33,7 +33,7 @@ Site estático para acompanhar o canal [@EuVimdeSantos](https://www.youtube.com/
 
 **Jeito fácil, sem código:** entre em https://app.pagescms.org com a conta do GitHub e abra este repositório. Aparece um formulário para editar patrocinadores, cupons, logos, canais indicados e categorias. Salvou, o site atualiza sozinho em cerca de 1 minuto.
 
-- `config/patrocinadores.json`: parceiros com cupom, link (vira QR code), selo de desconto, logo, cor, validade e destaque na home. O site também **detecta sozinho** cupons e links de anúncio nas descrições dos vídeos: cada página de vídeo mostra o card do parceiro citado nela, e anunciantes ainda não cadastrados aparecem em `/parceiros/` como "Também citados nos vídeos".
+- `config/patrocinadores.json`: parceiros com cupom, link (vira QR code), selo de desconto, logo, cor, validade e destaque na home. O site também **detecta sozinho** cupons e links de anúncio nas descrições dos vídeos: cada página de vídeo mostra o card do parceiro citado nela, e anunciantes ainda não cadastrados aparecem em `/parceiros/` em "Outras ofertas".
 - `config/canais.json`: canais indicados (basta o `@handle` e uma nota).
 - `config/overrides.json`: corrige a categoria de um vídeo específico.
 - `config/site.json`: textos, URL do site e regras de categoria por playlist.

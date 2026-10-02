@@ -12,7 +12,7 @@ content:
     format: json
     fields:
       - name: janelaDias
-        label: Dias para considerar "citado recentemente"
+        label: Dias para buscar anunciantes nas descrições
         type: number
         default: 5
       - name: patrocinadores
