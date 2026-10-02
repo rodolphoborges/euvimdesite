@@ -1,3 +1,5 @@
+﻿> **Aviso:** site de fa, sem afiliacao com o canal além do consumo do RSS publico. Todo video pertence aos detentores. Se o titular pedir remocao, abra issue para takedown.
+
 # Eu Vim de Santos — site complementar
 
 Site estático vanilla (HTML+CSS+JS puro) para consumir o canal https://www.youtube.com/@EuVimdeSantos sem depender do algoritmo. Hospedado no **GitHub Pages** (`usuario.github.io/euvimdesite`).
@@ -27,3 +29,4 @@ node scripts/build-feed.mjs
 
 ## Identidade
 Azul-marinho `#000066`, dourado `#D9A419`, branco, ciano `#29B6F6`. Logo em SVG próprio (`assets/img/logo.svg`), sem copiar PNG do canal.
+
