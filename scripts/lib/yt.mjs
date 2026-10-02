@@ -2,6 +2,7 @@
 import { unesc, isoToSecs } from './util.mjs';
 
 const UA = { 'user-agent': 'Mozilla/5.0 (compatible; EVS-site/2.0; +https://github.com/rodolphoborges/euvimdesite)' };
+const RSS_UA = { 'user-agent': 'EVS-site/1.0' };
 const API = 'https://www.googleapis.com/youtube/v3/';
 
 function pick(xml, tag) {
@@ -11,7 +12,13 @@ function pick(xml, tag) {
 
 // RSS traz só os ~15 uploads mais recentes, mas não precisa de chave.
 export async function fetchRss(channelId) {
-  const r = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, { headers: UA, signal: AbortSignal.timeout(30000) });
+  // O feed às vezes devolve 404/5xx temporários: tenta algumas vezes.
+  let r;
+  for (let i = 0; i < 4; i++) {
+    r = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, { headers: RSS_UA, signal: AbortSignal.timeout(30000) });
+    if (r.ok) break;
+    await new Promise(res => setTimeout(res, 2000 * (i + 1)));
+  }
   if (!r.ok) throw new Error('rss ' + r.status);
   const xml = await r.text();
   return xml.split('<entry>').slice(1).map(e => {
@@ -128,7 +135,7 @@ export async function channelIdFromPage(handle) {
     const html = await r.text();
     const id = (html.match(/"channelId":"(UC[\w-]{22})"/) || html.match(/channel\/(UC[\w-]{22})/) || [])[1];
     const title = unesc((html.match(/<meta property="og:title" content="([^"]+)"/) || [])[1] || handle);
-    const avatar = (html.match(/<meta property="og:image" content="([^"]+)"/) || [])[1] || '';
+    const avatar = ((html.match(/<meta property="og:image" content="([^"]+)"/) || [])[1] || '').replace(/=s\d+-/, '=s176-');
     return id ? { id, title, desc: '', avatar, subs: 0, videos: 0 } : null;
   } catch { return null; }
 }

@@ -11,7 +11,8 @@ export const videos = db.videos;
 export const updated = db.updated;
 export const longs = videos.filter(v => v.cat !== 'shorts' && !v.upcoming);
 export const shorts = videos.filter(v => v.cat === 'shorts');
-export const canais = read('data/canais.json', { canais: [] }).canais || [];
+export const canais = (read('data/canais.json', { canais: [] }).canais || [])
+  .map(c => ({ ...c, avatar: (c.avatar || '').replace(/=s\d+-/, '=s176-') }));
 export const catList = CAT_ORDER.filter(c => videos.some(v => v.cat === c));
 export { CATS };
 

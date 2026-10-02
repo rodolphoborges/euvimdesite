@@ -31,7 +31,7 @@ STATE = ROOT / "data" / "transcribe-state.json"
 
 MAX_FAILS = 3
 RETRY_AFTER = timedelta(days=7)
-BLOCK_PATTERNS = re.compile(r"sign in to confirm|not a bot|http error 429|too many requests|rate.?limit", re.I)
+BLOCK_PATTERNS = re.compile(r"sign in to confirm|not a bot|n[ãa]o [ée] um (rob[ôo]|bot)|confirmar que voc[êe]|http error 429|too many requests|rate.?limit", re.I)
 PT_MANUAL = ("pt-BR", "pt", "pt-PT")
 PT_AUTO = ("pt-orig", "pt", "pt-BR")
 
