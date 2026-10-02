@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/format.mjs';
+---
+<Base title="Não encontrado" noindex>
+  <div class="wrap page nf">
+    <p class="nf-k">404</p>
+    <h1>Bola fora da Vila.</h1>
+    <p>Essa página não existe (ou o vídeo foi removido).</p>
+    <p><a class="btn btn-gold" href={href()}>Voltar ao início</a> <a class="btn" href={href('videos/')}>Ver arquivo</a></p>
+  </div>
+</Base>

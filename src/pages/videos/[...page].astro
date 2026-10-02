@@ -1,0 +1,11 @@
+---
+import Listing from '../../components/Listing.astro';
+import { videos, PAGE } from '../../lib/data.mjs';
+import { href } from '../../lib/format.mjs';
+export function getStaticPaths({ paginate }) {
+  return paginate(videos.filter(v => v.cat !== 'shorts'), { pageSize: PAGE });
+}
+const { page } = Astro.props;
+---
+<Listing page={page} title="Arquivo completo" basePath={href('videos/')}
+  intro={`Todos os ${page.total} vídeos do canal, do mais novo ao mais antigo.`} />

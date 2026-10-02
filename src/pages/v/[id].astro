@@ -1,0 +1,106 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import Rail from '../../components/Rail.astro';
+import Player from '../../components/Player.astro';
+import { videos, longs, site, CATS, transcript } from '../../lib/data.mjs';
+import { href, thumb, thumbHq, ytUrl, compact, fmtSecs, fmtDate } from '../../lib/format.mjs';
+import { esc } from '../../../scripts/lib/util.mjs';
+
+export function getStaticPaths() {
+  return videos.filter(v => v.cat !== 'shorts').map(v => ({ params: { id: v.id }, props: { v } }));
+}
+const { v } = Astro.props;
+const tr = transcript(v.id);
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const related = videos.filter(x => x.id !== v.id && x.cat === v.cat && x.cat !== 'shorts').slice(0, 10);
+const more = longs.filter(x => x.id !== v.id && x.cat !== v.cat).slice(0, 12);
+const idx = longs.findIndex(x => x.id === v.id);
+const newer = idx > 0 ? longs[idx - 1] : null;
+const older = idx >= 0 && idx < longs.length - 1 ? longs[idx + 1] : null;
+
+const statItems = [
+  v.views && [compact(v.views), 'visualizações'],
+  v.likes && [compact(v.likes), 'curtidas'],
+  v.comments && [compact(v.comments), 'comentários'],
+  v.secs && [fmtSecs(v.secs), 'duração'],
+].filter(Boolean);
+
+// descrição: escapa e transforma URLs em links
+const descHtml = v.desc
+  ? esc(v.desc)
+      .replace(/https?:\/\/[^\s<]+/g, u => `<a href="${u}" rel="nofollow noopener" target="_blank">${u.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60)}</a>`)
+      .replace(/\n/g, '<br>')
+  : '';
+
+// transcrição em parágrafos de ~45 s
+const paras = [];
+if (tr?.segments?.length) {
+  let cur = null;
+  for (const [t, text] of tr.segments) {
+    if (!cur || t - cur.t >= 45) { cur = { t: Math.floor(t), parts: [] }; paras.push(cur); }
+    cur.parts.push(text);
+  }
+}
+const txText = tr?.segments?.map(s => s[1]).join(' ') || '';
+const words = txText ? txText.split(/\s+/).length : 0;
+const txSource = tr?.source === 'youtube-auto' ? 'legendas automáticas do YouTube' : 'reconhecimento de voz automático (Whisper)';
+
+const ld = {
+  '@context': 'https://schema.org', '@type': 'VideoObject',
+  name: v.title, description: (v.desc || v.title).slice(0, 500),
+  thumbnailUrl: [thumbHq(v.id)], uploadDate: v.published,
+  embedUrl: `https://www.youtube-nocookie.com/embed/${v.id}`, url: pageUrl,
+  ...(v.secs ? { duration: `PT${v.secs}S` } : {}),
+  ...(v.views ? { interactionStatistic: { '@type': 'InteractionCounter', interactionType: { '@type': 'WatchAction' }, userInteractionCount: v.views } } : {}),
+  ...(txText ? { transcript: txText.slice(0, 5000) } : {}),
+  author: { '@type': 'Person', name: site.author },
+  inLanguage: 'pt-BR',
+};
+const share = encodeURIComponent(`${v.title} ${pageUrl}`);
+---
+<Base title={v.title} desc={(v.desc || v.title).split('\n')[0].slice(0, 160)} image={thumbHq(v.id)} ogType="video.other">
+  <Fragment slot="head">
+    <meta data-pagefind-meta="image" content={thumb(v.id)}>
+    <meta data-pagefind-meta="date" content={v.published.slice(0, 10)}>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(ld).replace(/</g, '\\u003c')} />
+  </Fragment>
+  <article class="wrap video">
+    <nav class="crumbs" aria-label="Você está em"><a href={href()}>Início</a> › <a href={href(`categoria/${v.cat}/`)}>{CATS[v.cat]}</a></nav>
+    <div class="video-grid">
+      <div class="video-main" data-pagefind-body>
+        <Player v={v} eager />
+        <h1>{v.title}</h1>
+        <p class="video-k"><span class="pill pill-dark" data-pagefind-filter="editoria">{CATS[v.cat]}</span> <time datetime={v.published}>{fmtDate(v.published, { day: '2-digit', month: 'long', year: 'numeric' })}</time></p>
+        {statItems.length > 0 && <dl class="stats" data-pagefind-ignore>{statItems.map(([b, s]) => <div><dt>{s}</dt><dd>{b}</dd></div>)}</dl>}
+        <div class="acoes" data-pagefind-ignore>
+          <a class="btn btn-gold" href={ytUrl(v)} target="_blank" rel="noopener">Assistir no YouTube</a>
+          <a class="btn" href={`https://wa.me/?text=${share}`} target="_blank" rel="noopener">WhatsApp</a>
+          <button class="btn" type="button" data-copy={pageUrl}>Copiar link</button>
+        </div>
+        {descHtml && <section class="desc"><h2 class="sr">Descrição</h2><p set:html={descHtml} /></section>}
+        {paras.length > 0 && (
+          <section class="transcricao" id="transcricao">
+            <details open={paras.length <= 12 ? true : undefined}>
+              <summary><h2>Transcrição</h2><span data-pagefind-ignore>{compact(words)} palavras · {Math.max(1, Math.round(words / 200))} min de leitura</span></summary>
+              <p class="tx-aviso" data-pagefind-ignore>Gerada por {txSource}; pode conter erros. Clique no horário para assistir daquele ponto.</p>
+              <div class="tx-body">
+                {paras.map(p => <p><a class="ts" href={`https://youtu.be/${v.id}?t=${p.t}`} data-t={p.t} data-pagefind-ignore>{fmtSecs(p.t)}</a> {p.parts.join(' ')}</p>)}
+              </div>
+            </details>
+          </section>
+        )}
+        <nav class="prevnext" data-pagefind-ignore>
+          {older ? <a href={href(`v/${older.id}/`)}><small>‹ Anterior</small>{older.title}</a> : <span></span>}
+          {newer && <a class="nx" href={href(`v/${newer.id}/`)}><small>Próximo ›</small>{newer.title}</a>}
+        </nav>
+      </div>
+      <aside class="video-side">
+        <h2>{related.length ? `Mais de ${CATS[v.cat]}` : 'Mais do canal'}</h2>
+        <div class="side-list">{(related.length ? related : more).map(x => <Card v={x} />)}</div>
+      </aside>
+    </div>
+    {related.length > 0 && more.length > 0 && <Rail title="Continue assistindo" link={href('videos/')}>{more.map(x => <Card v={x} />)}</Rail>}
+  </article>
+</Base>

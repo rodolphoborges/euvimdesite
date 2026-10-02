@@ -1,0 +1,77 @@
+name: pipeline
+# Coleta dados do YouTube (3x/dia), gera o site com Astro + Pagefind e publica no GitHub Pages.
+# Também republica sozinho quando o robô de transcrição termina.
+on:
+  schedule:
+    - cron: '17 11 * * *'
+    - cron: '17 19 * * *'
+    - cron: '17 1 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: [transcribe]
+    types: [completed]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: node scripts/fetch.mjs
+        env:
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          BACKFILL_PAGES: '20'
+      - name: commit dos dados
+        run: |
+          git config user.name "evs-bot"
+          git config user.email "evs-bot@users.noreply.github.com"
+          git add data/ config/
+          git diff --cached --quiet && exit 0
+          git commit -m "dados: atualiza acervo $(date -u +%F)"
+          for i in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            sleep $((i * 10))
+          done
+          exit 1
+
+  deploy:
+    needs: fetch
+    if: always() && needs.fetch.result != 'failure' && needs.fetch.result != 'cancelled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

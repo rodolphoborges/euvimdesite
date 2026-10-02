@@ -1,0 +1,20 @@
+---
+import Listing from '../../../components/Listing.astro';
+import { videos, catList, CATS, PAGE } from '../../../lib/data.mjs';
+import { href } from '../../../lib/format.mjs';
+export function getStaticPaths({ paginate }) {
+  return catList.flatMap(cat => paginate(videos.filter(v => v.cat === cat), { params: { cat }, pageSize: cat === 'shorts' ? 60 : PAGE }));
+}
+const { page } = Astro.props;
+const { cat } = Astro.params;
+const intros = {
+  taticas: 'Análises de jogo, posicionamento e escalação.',
+  comentarios: 'Opinião, reacts e pós-jogo.',
+  noticias: 'Mercado, contratações e bastidores do Santos.',
+  entrevistas: 'Convidados e histórias do Santos.',
+  lives: 'Live do Trio, corredor de fogo e transmissões ao vivo.',
+  shorts: 'Os vídeos curtos do canal. Abrem direto no YouTube.',
+};
+---
+<Listing page={page} cat={cat} title={CATS[cat]} basePath={href(`categoria/${cat}/`)}
+  intro={`${intros[cat] || ''} ${page.total} vídeos.`} />

@@ -1,0 +1,9 @@
+---
+import { thumbHq, ytUrl, compact } from '../lib/format.mjs';
+const { v } = Astro.props;
+---
+<a class="short" href={ytUrl(v)} target="_blank" rel="noopener">
+  <img src={thumbHq(v.id)} alt="" width="180" height="320" loading="lazy" decoding="async">
+  <span>{v.title}</span>
+  {v.views > 0 && <small>{compact(v.views)} views</small>}
+</a>

@@ -1,0 +1,151 @@
+---
+import '../styles/global.css';
+import { site, updated } from '../lib/data.mjs';
+import { href, fmtDate } from '../lib/format.mjs';
+
+interface Props {
+  title?: string;
+  desc?: string;
+  image?: string;
+  ogType?: string;
+  nav?: string;
+  noindex?: boolean;
+}
+const { title = '', desc = site.tagline, image = '', ogType = 'website', nav = '', noindex = false } = Astro.props;
+const full = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const links = [
+  ['videos/', 'Vídeos', 'videos'],
+  ['categoria/lives/', 'Lives', 'lives'],
+  ['canais/', 'Canais', 'canais'],
+  ['sobre/', 'Sobre', 'sobre'],
+];
+const icons = {
+  home: 'M12 3 3 10v11h6v-6h6v6h6V10z',
+  videos: 'M4 5h16v14H4zm6 3v8l6-4z',
+  busca: 'M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3m0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10',
+  canais: 'M7 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8m10 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6M1 20c0-3.3 2.7-6 6-6s6 2.7 6 6zm13 0c0-1.9-.7-3.7-1.9-5 1.2-.6 2.5-1 3.9-1 3.3 0 6 2.2 6 5v1z',
+};
+const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'videos'], ['busca/', 'Buscar', 'busca', 'busca'], ['canais/', 'Canais', 'canais', 'canais']];
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{full}</title>
+<meta name="description" content={desc}>
+<link rel="canonical" href={canonical}>
+{noindex && <meta name="robots" content="noindex">}
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href={href('favicon.svg')} type="image/svg+xml">
+<link rel="manifest" href={href('manifest.webmanifest')}>
+<link rel="alternate" type="application/rss+xml" title={site.name} href={href('feed.xml')}>
+<link rel="preconnect" href="https://i.ytimg.com">
+<meta property="og:site_name" content={site.name}>
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content={title || site.name}>
+<meta property="og:description" content={desc}>
+<meta property="og:type" content={ogType}>
+<meta property="og:url" content={canonical}>
+{image && <meta property="og:image" content={image}>}
+<meta name="twitter:card" content="summary_large_image">
+<slot name="head" />
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href={href()} aria-label={`${site.name} — início`}>
+      <img src={href('logo.svg')} width="36" height="36" alt="">
+      <span><strong>EU VIM DE SANTOS</strong><small>por {site.author}</small></span>
+    </a>
+    <nav class="menu" aria-label="Principal">
+      {links.map(([p, label, key]) => <a href={href(p)} aria-current={nav === key ? 'page' : undefined}>{label}</a>)}
+    </nav>
+    <form class="busca" action={href('busca/')} role="search">
+      <label class="sr" for="q-top">Buscar</label>
+      <input id="q-top" name="q" type="search" placeholder="Buscar vídeos e falas…" autocomplete="off">
+      <button type="submit" aria-label="Buscar"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={icons.busca} /></svg></button>
+    </form>
+    <a class="btn-sub" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">Inscrever-se</a>
+  </div>
+</header>
+<main id="conteudo">
+  <slot />
+</main>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div>
+      <strong>{site.name}</strong>
+      <p>Site de fã, complementar ao canal de {site.author}. Sem afiliação com o Santos FC nem com o YouTube. Os vídeos pertencem aos seus autores e são exibidos pelo player oficial do YouTube.</p>
+    </div>
+    <nav aria-label="Rodapé">
+      <a href={href('videos/')}>Arquivo completo</a>
+      <a href={href('canais/')}>Canais indicados</a>
+      <a href={href('sobre/#remocao')}>Aviso legal e remoção</a>
+      <a href={href('feed.xml')}>RSS</a>
+      <a href={site.repoUrl} rel="noopener">Código-fonte</a>
+    </nav>
+  </div>
+  <p class="wrap foot-upd">Atualizado automaticamente · dados de {fmtDate(updated, { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+</footer>
+<nav class="tabbar" aria-label="Atalhos">
+  {tabs.map(([p, label, ic, key]) => (
+    <a href={href(p)} aria-current={nav === key || (!key && !nav) ? 'page' : undefined}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={icons[ic]} /></svg>{label}
+    </a>
+  ))}
+</nav>
+<script>
+  // Interações mínimas: player sob demanda, trilhos, copiar link, horários da transcrição.
+  const embed = (box: HTMLElement, start = 0) => {
+    const id = box.dataset.id;
+    box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${start ? `&start=${start}` : ''}" title="${box.dataset.title || 'Vídeo'}" allow="accelerometer;autoplay;encrypted-media;picture-in-picture;web-share" allowfullscreen></iframe>`;
+  };
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const lite = t.closest<HTMLElement>('.player .lite');
+    if (lite && !(e as MouseEvent).ctrlKey && !(e as MouseEvent).metaKey) {
+      e.preventDefault();
+      embed(lite.parentElement as HTMLElement);
+      return;
+    }
+    const ts = t.closest<HTMLElement>('a.ts');
+    const box = document.querySelector<HTMLElement>('.video .player');
+    if (ts && box) {
+      e.preventDefault();
+      embed(box, Number(ts.dataset.t) || 0);
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    const cp = t.closest<HTMLButtonElement>('[data-copy]');
+    if (cp) {
+      navigator.clipboard?.writeText(cp.dataset.copy || location.href).then(() => {
+        const old = cp.textContent; cp.textContent = 'Copiado ✓';
+        setTimeout(() => (cp.textContent = old), 1800);
+      });
+    }
+  });
+  if (matchMedia('(hover: hover) and (min-width: 861px)').matches) {
+    document.querySelectorAll<HTMLElement>('.rail').forEach((rail) => {
+      const track = rail.querySelector<HTMLElement>('.rail-track');
+      const nav = rail.querySelector<HTMLElement>('.rail-nav');
+      if (!track || !nav || track.scrollWidth <= track.clientWidth + 4) return;
+      nav.hidden = false;
+      const [prev, next] = nav.querySelectorAll('button');
+      const sync = () => {
+        prev.disabled = track.scrollLeft < 8;
+        next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+      };
+      nav.addEventListener('click', (e) => {
+        const b = (e.target as HTMLElement).closest('button');
+        if (b) track.scrollBy({ left: Number(b.dataset.dir) * track.clientWidth * 0.9, behavior: 'smooth' });
+      });
+      track.addEventListener('scroll', sync, { passive: true });
+      sync();
+    });
+  }
+</script>
+</body>
+</html>

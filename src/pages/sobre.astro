@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, videos } from '../lib/data.mjs';
+import { href } from '../lib/format.mjs';
+---
+<Base title="Sobre" desc={`Sobre o ${site.name} e este site.`} nav="sobre">
+  <div class="wrap page prose">
+    <header class="page-h"><h1>Sobre</h1><p>{site.tagline}</p></header>
+    <p><strong>{site.name}</strong> é o canal de {site.author} ({site.authorHandle}), jornalista, com comentários e análises sobre o Santos FC quase todo dia. Este site é a versão calma do canal: arquivo completo ({videos.length} vídeos até agora), busca, transcrições e páginas fáceis de compartilhar.</p>
+    <h2>Editorias</h2>
+    <ul>
+      <li><b>Táticas</b>: análise de jogo, posicionamento e escalação.</li>
+      <li><b>Comentários</b>: reacts, opinião e pós-jogo.</li>
+      <li><b>Notícias</b>: mercado, contratações, bastidores.</li>
+      <li><b>Lives</b>: Live do Trio, corredor de fogo e transmissões.</li>
+      <li><b>Entrevistas</b>: convidados e histórias do Santos.</li>
+    </ul>
+    <h2>Como funciona</h2>
+    <p>Um robô confere o canal várias vezes por dia e atualiza o site sozinho. Outro robô transcreve os vídeos em português, aos poucos, do mais novo para o mais antigo. As transcrições vêm das legendas automáticas do YouTube ou de reconhecimento de voz e podem ter erros.</p>
+    <p>Nenhum vídeo fica hospedado aqui. O player é o do próprio YouTube (modo sem cookies), então toda visualização conta para o canal. O site não usa rastreadores nem anúncios.</p>
+    <h2>Apoie o canal</h2>
+    <p>
+      <a class="btn btn-gold" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">Inscrever-se</a>
+      <a class="btn" href={site.membersUrl} target="_blank" rel="noopener">Seja membro</a>
+      <a class="btn" href={href('canais/')}>Canais indicados</a>
+    </p>
+    <h2 id="remocao">Aviso legal e remoção</h2>
+    <p>Site de fã, sem afiliação com o Santos FC, com o YouTube ou com o canal. Todos os vídeos, descrições e falas pertencem aos seus autores. Se você é titular de algum conteúdo e quer removê-lo, <a href={`${site.repoUrl}/issues/new`} rel="noopener">abra uma issue no repositório</a> e o conteúdo sai na próxima atualização.</p>
+  </div>
+</Base>

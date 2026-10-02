@@ -1,32 +1,57 @@
-﻿> **Aviso:** site de fa, sem afiliacao com o canal além do consumo do RSS publico. Todo video pertence aos detentores. Se o titular pedir remocao, abra issue para takedown.
+> **Aviso:** site de fã, sem afiliação com o canal, o Santos FC ou o YouTube. Todo vídeo e toda fala pertencem aos seus autores. Se o titular pedir remoção, [abra uma issue](https://github.com/rodolphoborges/euvimdesite/issues/new) e o conteúdo sai na próxima atualização.
 
 # Eu Vim de Santos — site complementar
 
-Site estático vanilla (HTML+CSS+JS puro) para consumir o canal https://www.youtube.com/@EuVimdeSantos sem depender do algoritmo. Hospedado no **GitHub Pages** (`usuario.github.io/euvimdesite`).
+Site estático para acompanhar o canal [@EuVimdeSantos](https://www.youtube.com/@EuVimdeSantos) fora do algoritmo: acervo completo, busca (inclusive no que foi falado nos vídeos), transcrições em pt-BR e canais indicados. Publicado no GitHub Pages em https://rodolphoborges.github.io/euvimdesite.
 
-## Como funciona o auto-feed
-- Fonte: RSS público `https://www.youtube.com/feeds/videos.xml?channel_id=UC2yJDeDFcv1cAHA0BgfJ9ww` (sem API key, sem custo, sem segredo).
-- `.github/workflows/update.yml` roda 3x/dia (12:17, 18:17, 01:17 UTC) + manual (`workflow_dispatch`) e executa `node scripts/build-feed.mjs`.
-- Script gera: `data/videos.json` (merge, máx 100), `v/[id].html` (SEO por vídeo), `sitemap.xml`, `feed.xml`. Commita só se mudou.
-- Site lê `data/videos.json` e renderiza com busca/filtro client-side. Nenhum vídeo hospedado aqui.
+**Custo: zero.** Tudo roda no GitHub Actions (grátis em repositório público) e no GitHub Pages.
 
-## Estatísticas (views, curtidas, comentários, duração)
-- Sem chave: o build usa só o RSS (traz views) e a ficha mostra o que houver. Nada quebra.
-- Com chave: crie uma API key do **YouTube Data API v3** (Google Cloud, gratuita; o consumo aqui é ~3 chamadas/dia) e cadastre como secret `YT_API_KEY` em Settings > Secrets > Actions. Os workflows já repassam como env e o script enriquece `data/videos.json` + páginas em build-time. A chave nunca vai para o navegador.
+## Como funciona
 
-## Rodar local
+| Peça | O que faz |
+|---|---|
+| `scripts/fetch.mjs` | Lê o RSS do canal e a YouTube Data API: percorre **todo** o acervo, atualiza views/curtidas/comentários/duração, detecta lives e shorts, categoriza e busca os canais indicados. Grava `data/*.json`. Zero dependências. |
+| `scripts/transcribe.py` | Transcreve os vídeos em pt-BR, do mais novo ao mais antigo: usa a legenda do YouTube quando existe, senão baixa só o áudio e roda o **Whisper** (faster-whisper, CPU). Grava `data/transcripts/<id>.json`. |
+| `src/` (Astro) | Gera o site como HTML estático puro, praticamente sem JavaScript. O player do YouTube só carrega no clique. |
+| Pagefind | Índice de busca estático e fatiado, gerado no build; indexa títulos, descrições e transcrições. |
+| `.github/workflows/pipeline.yml` | 3×/dia: coleta → commit dos dados → build → deploy. Também republica após cada push e após cada rodada de transcrição. |
+| `.github/workflows/transcribe.yml` | A cada 6 h, até ~5 h de trabalho por rodada. |
+
+## Configuração
+
+1. **Settings → Pages → Source: GitHub Actions.**
+2. **Chave da YouTube Data API** (grátis, necessária para o acervo completo e as estatísticas):
+   1. Em https://console.cloud.google.com crie um projeto.
+   2. *APIs e serviços → Biblioteca →* ative **YouTube Data API v3**.
+   3. *Credenciais → Criar credenciais → Chave de API.* Restrinja a chave à YouTube Data API v3.
+   4. No GitHub: *Settings → Secrets and variables → Actions → New repository secret* com o nome `YT_API_KEY`.
+
+   O uso fica em ~100–200 unidades por dia, contra 10.000 da cota grátis. Sem a chave o site continua funcionando, só com os ~15 vídeos mais recentes do RSS.
+3. Rode *Actions → pipeline → Run workflow* e *Actions → transcribe → Run workflow* pela primeira vez.
+
+### Personalizar
+
+- `config/canais.json`: canais indicados (basta o `@handle` e uma nota).
+- `config/overrides.json`: corrige a categoria de um vídeo específico.
+- `config/site.json`: textos, URL do site e regras de categoria por playlist.
+
+## Rodar localmente
+
 ```powershell
-python -m http.server 8000
-# abrir http://localhost:8000/
-node scripts/build-feed.mjs
+npm install
+npm run fetch                                 # opcional: $env:YT_API_KEY="..." antes
+$env:SITE_URL="http://localhost:4321"; npm run build
+npx astro preview
+# transcrição (opcional):
+pip install -r scripts/requirements.txt
+python scripts/transcribe.py --limit 2
 ```
 
-## Publicar no Pages
-1. Criar repo `euvimdesite`, push na branch `main`.
-2. Settings > Pages > Source: **GitHub Actions**.
-3. Ajustar `SITE_URL` nos workflows para `https://<usuario>.github.io/euvimdesite`.
-4. Deploy automático via `deploy.yml`.
+## Limitações conhecidas
 
-## Identidade
-Azul-marinho `#000066`, dourado `#D9A419`, branco, ciano `#29B6F6`. Logo em SVG próprio (`assets/img/logo.svg`), sem copiar PNG do canal.
+- O YouTube às vezes bloqueia downloads vindos dos servidores do GitHub (“confirme que você não é um robô”). Quando isso acontece, o robô de transcrição para sem marcar erro e tenta de novo na próxima rodada; o resto do site não é afetado. Se o bloqueio persistir, dá para rodar `scripts/transcribe.py` em qualquer computador e dar push nos arquivos de `data/transcripts/`.
+- As transcrições são automáticas e podem conter erros.
 
+## Licença
+
+Código sob MIT (ver `LICENSE`). O conteúdo dos vídeos não é coberto por essa licença.

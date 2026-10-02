@@ -1,0 +1,11 @@
+---
+const { title, link = '', cls = '' } = Astro.props;
+---
+<section class={`rail ${cls}`}>
+  <div class="rail-h">
+    <h2>{title}</h2>
+    {link && <a href={link}>Ver tudo <span aria-hidden="true">›</span></a>}
+    <span class="rail-nav" hidden><button type="button" data-dir="-1" aria-label="Anterior">‹</button><button type="button" data-dir="1" aria-label="Próximo">›</button></span>
+  </div>
+  <div class="rail-track"><slot /></div>
+</section>

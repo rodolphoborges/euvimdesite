@@ -1,0 +1,19 @@
+---
+import { transcribed, now } from '../lib/data.mjs';
+import { thumb, videoHref, kicker, compact, fmtSecs } from '../lib/format.mjs';
+const { v, eager = false } = Astro.props;
+const ext = v.cat === 'shorts';
+---
+<a class="card" href={videoHref(v)} target={ext ? '_blank' : undefined} rel={ext ? 'noopener' : undefined}>
+  <span class="thumb">
+    <img src={thumb(v.id)} alt="" width="320" height="180" loading={eager ? undefined : 'lazy'} decoding="async">
+    {v.secs > 0 && <span class="dur">{fmtSecs(v.secs)}</span>}
+    {v.upcoming && <span class="tag-live">AO VIVO</span>}
+    {transcribed.has(v.id) && <span class="tag-tx" title="Com transcrição">TXT</span>}
+  </span>
+  <span class="card-body">
+    <span class="kicker">{kicker(v, now)}</span>
+    <span class="card-title">{v.title}</span>
+    {v.views > 0 && <span class="card-meta">{compact(v.views)} views</span>}
+  </span>
+</a>

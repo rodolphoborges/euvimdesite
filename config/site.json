@@ -1,0 +1,19 @@
+{
+  "name": "Eu Vim de Santos",
+  "author": "Felipe Noronha",
+  "authorHandle": "@fgnoronha",
+  "tagline": "Táticas, comentários, notícias e lives do Santos FC — fora do algoritmo.",
+  "channelId": "UC2yJDeDFcv1cAHA0BgfJ9ww",
+  "channelHandle": "@EuVimdeSantos",
+  "siteUrl": "https://rodolphoborges.github.io/euvimdesite",
+  "repoUrl": "https://github.com/rodolphoborges/euvimdesite",
+  "membersUrl": "https://www.youtube.com/channel/UC2yJDeDFcv1cAHA0BgfJ9ww/join",
+  "pageSize": 48,
+  "playlistCats": {
+    "live do trio|ao vivo|lives?\b": "lives",
+    "entrevista": "entrevistas",
+    "an[áa]lise|t[áa]tica|p[óo]s-jogo": "taticas",
+    "not[íi]cia|mercado": "noticias",
+    "react|coment[áa]rio": "comentarios"
+  }
+}
