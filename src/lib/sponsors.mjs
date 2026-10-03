@@ -7,6 +7,15 @@ import { videos, now } from './data.mjs';
 const cfg = (() => { try { return JSON.parse(readFileSync('config/patrocinadores.json', 'utf8')); } catch { return { patrocinadores: [] }; } })();
 export const janelaDias = cfg.janelaDias || 5;
 
+// Tradução de campos de marketing (chamada/descrição/botão) por nome. Fallback: PT.
+const _spT = {};
+export const sponsorT = (locale, p) => {
+  if (locale === 'pt' || !p?.nome) return p;
+  _spT[locale] ??= (() => { try { return JSON.parse(readFileSync(`data/i18n/${locale}/patrocinadores.json`, 'utf8')); } catch { return {}; } })();
+  const o = _spT[locale][p.nome];
+  return o ? { ...p, chamada: o.chamada ?? p.chamada, descricao: o.descricao ?? p.descricao, botao: o.botao ?? p.botao } : p;
+};
+
 const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
 const IGNORE = /(^|\.)(youtube\.com|youtu\.be|instagram\.com|twitter\.com|x\.com|tiktok\.com|facebook\.com|threads\.net|twitch\.tv|kick\.com|linktr\.ee|whatsapp\.com|wa\.me|t\.me|spotify\.com|apple\.com)$/;
 const AD_HINT = /cupom|c[óo]digo|#publi|patrocinad|desconto|parceiro=|\bref=|\baff/i;

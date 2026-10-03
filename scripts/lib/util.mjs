@@ -27,8 +27,11 @@ export function unesc(s) {
   return String(s).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 }
 
-export function compact(n) {
-  try { return new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }).format(Number(n)); } catch { return String(n); }
+const LOCALE_TAG = { pt: 'pt-BR', en: 'en-US', es: 'es' };
+const tag = l => LOCALE_TAG[l] || LOCALE_TAG.pt;
+
+export function compact(n, locale = 'pt') {
+  try { return new Intl.NumberFormat(tag(locale), { notation: 'compact', maximumFractionDigits: 1 }).format(Number(n)); } catch { return String(n); }
 }
 
 // ISO 8601 (PT1H2M3S) → segundos
@@ -46,18 +49,24 @@ export function fmtSecs(s) {
 }
 
 const TZ = 'America/Sao_Paulo';
-export function fmtDate(d, opts = { day: '2-digit', month: 'short', year: 'numeric' }) {
-  try { return new Date(d).toLocaleDateString('pt-BR', { timeZone: TZ, ...opts }).replace(/\./g, ''); } catch { return ''; }
+export function fmtDate(d, opts = { day: '2-digit', month: 'short', year: 'numeric' }, locale = 'pt') {
+  try { return new Date(d).toLocaleDateString(tag(locale), { timeZone: TZ, ...opts }).replace(/\./g, ''); } catch { return ''; }
 }
 
-export function ago(d, now = Date.now()) {
+const AGO = {
+  pt: { min: n => `há ${n} min`, h: n => `há ${n} h`, day1: 'ontem', days: n => `há ${n} dias` },
+  en: { min: n => `${n} min ago`, h: n => `${n} h ago`, day1: 'yesterday', days: n => `${n} days ago` },
+  es: { min: n => `hace ${n} min`, h: n => `hace ${n} h`, day1: 'ayer', days: n => `hace ${n} días` },
+};
+export function ago(d, now = Date.now(), locale = 'pt') {
+  const T = AGO[locale] || AGO.pt;
   const s = Math.round((now - new Date(d)) / 1000);
-  if (s < 3600) return `há ${Math.max(1, Math.round(s / 60))} min`;
-  if (s < 86400) return `há ${Math.round(s / 3600)} h`;
+  if (s < 3600) return T.min(Math.max(1, Math.round(s / 60)));
+  if (s < 86400) return T.h(Math.round(s / 3600));
   const days = Math.round(s / 86400);
-  if (days === 1) return 'ontem';
-  if (days < 7) return `há ${days} dias`;
-  return fmtDate(d);
+  if (days === 1) return T.day1;
+  if (days < 7) return T.days(days);
+  return fmtDate(d, undefined, locale);
 }
 
 export function slugify(s) {
