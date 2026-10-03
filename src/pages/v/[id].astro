@@ -86,11 +86,12 @@ const share = encodeURIComponent(`${v.title} ${pageUrl}`);
         </div>
         {descHtml && <section class="desc"><h2 class="sr">Descrição</h2><p set:html={descHtml} /></section>}
         {bol?.titulo && (
-          <section class="boletim">
+          <section class="boletim" id="boletim">
             <p class="hero-k"><span class="pill">Boletim</span> resumo automático revisado</p>
             <h2>{bol.titulo}</h2>
             <p>{bol.lead}</p>
             <ul>{bol.pontos.map(p => <li>{p}</li>)}</ul>
+            <p class="bol-todos"><a href={href('boletins/')}>Todos os boletins ›</a></p>
           </section>
         )}
         {paras.length > 0 && (
