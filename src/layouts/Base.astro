@@ -50,8 +50,8 @@ const langs = altLocales(Astro.url.pathname);
 <link rel="alternate" hreflang="x-default" href={canonicalPt}>
 {noindex && <meta name="robots" content="noindex">}
 <meta name="theme-color" content="#0b0b0f">
-<link rel="icon" href={L('favicon.svg')} type="image/svg+xml">
-<link rel="manifest" href={L('manifest.webmanifest')}>
+<link rel="icon" href={href('favicon.svg')} type="image/svg+xml">
+<link rel="manifest" href={href('manifest.webmanifest')}>
 <link rel="alternate" type="application/rss+xml" title={site.name} href={L(locale === 'pt' ? 'feed.xml' : `feed-${locale}.xml`)}>
 <link rel="preconnect" href="https://i.ytimg.com">
 <meta property="og:site_name" content={site.name}>
@@ -71,7 +71,7 @@ const langs = altLocales(Astro.url.pathname);
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href={L()} aria-label={T('brand_home')}>
-      <img src={L('logo.svg')} width="36" height="36" alt="">
+      <img src={href('logo.svg')} width="36" height="36" alt="">
       <span><strong>EU VIM DE SANTOS</strong><small>{T('brand_tag')}</small></span>
     </a>
     <nav class="menu" aria-label={T('menu_label')}>
