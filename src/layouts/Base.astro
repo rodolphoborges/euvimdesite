@@ -56,12 +56,14 @@ const langs = altLocales(Astro.url.pathname);
 <link rel="preconnect" href="https://i.ytimg.com">
 <meta property="og:site_name" content={site.name}>
 <meta property="og:locale" content={ogLocale}>
+{langs.map(a => <meta property="og:locale:alternate" content={{ pt: 'pt_BR', en: 'en_US', es: 'es_ES' }[a.locale]}>)}
 <meta property="og:title" content={title || site.name}>
 <meta property="og:description" content={desc || T('site_desc')}>
 <meta property="og:type" content={ogType}>
 <meta property="og:url" content={canonical}>
-{image && <meta property="og:image" content={image}>}
+{image && <meta property="og:image" content={new URL(image, Astro.site).href}>}
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: canonicalPt, inLanguage: htmlLang, publisher: { '@type': 'Organization', name: site.name, url: canonicalPt, logo: new URL(L('logo.svg'), Astro.site).href } }).replace(/</g, '\\u003c')} />
 <slot name="head" />
 </head>
 <body>

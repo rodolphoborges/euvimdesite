@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rodolphoborges.github.io/euvimdesite/sitemap-index.xml
