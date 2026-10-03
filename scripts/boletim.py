@@ -33,7 +33,7 @@ STATE = ROOT / "data" / "boletim-state.json"
 
 MAX_FAILS = 3
 MAX_CHARS = 12000  # teto do trecho enviado ao modelo (avisa quando corta)
-TIMEOUT = 300
+TIMEOUT = int(os.environ.get("BOLETIM_TIMEOUT", "300"))
 
 
 def now_iso() -> str:
@@ -107,28 +107,41 @@ def call_ollama(system: str, user: str, model: str) -> str:
 
 
 def call_api(system: str, user: str, model: str) -> str:
+    import urllib.error
+
     base = os.environ.get("BOLETIM_API_URL", "").rstrip("/")
     key = os.environ.get("BOLETIM_API_KEY", "")
-    if not base or not key:
-        raise RuntimeError("defina BOLETIM_API_URL e BOLETIM_API_KEY")
-    j = _post(f"{base}/chat/completions", {
-        "model": model, "temperature": 0.2,
-        "response_format": {"type": "json_object"},
-        "messages": [
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ],
-    }, headers={"Authorization": f"Bearer {key}"})
-    try:
-        return j["choices"][0]["message"]["content"]
-    except (KeyError, IndexError) as e:
-        raise RuntimeError(f"resposta inesperada da API: {str(j)[:160]}") from e
+    if not base:
+        raise RuntimeError("defina BOLETIM_API_URL (BOLETIM_API_KEY só se o servidor exigir)")
+    headers = {"Authorization": f"Bearer {key}"} if key else {}
+    msgs = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+    for strict in (True, False):
+        payload = {"model": model, "temperature": 0.2, "messages": msgs}
+        if strict:
+            payload["response_format"] = {"type": "json_object"}
+        try:
+            j = _post(f"{base}/chat/completions", payload, headers=headers)
+        except urllib.error.HTTPError as e:
+            if strict and e.code == 400:
+                print("  api sem response_format, tentando sem travar JSON")
+                continue
+            raise
+        try:
+            return j["choices"][0]["message"]["content"]
+        except (KeyError, IndexError) as e:
+            raise RuntimeError(f"resposta inesperada da API: {str(j)[:160]}") from e
+    raise RuntimeError("API rejeitou o pedido com e sem response_format")
 
 
 # ---------------------------------------------------------------- validacao
 
 def parse_json(raw: str) -> dict:
-    t = raw.strip()
+    import re as _re
+
+    t = _re.sub(r"<think>.*?</think>", "", raw, flags=_re.S | _re.I).strip()
     if t.startswith("```"):
         t = t.split("\n", 1)[1] if "\n" in t else ""
         t = t.rsplit("```", 1)[0]
@@ -289,12 +302,13 @@ def main():
     state = load_json(STATE, {"fails": {}})
     state.setdefault("fails", {})
     published = {p.stem for p in OUT.glob("*.json")}
+    drafted = {p.stem for p in DRAFTS.glob("*.json")}
     done = {p.stem for p in TRANSCRIPTS.glob("*.json")}
 
     def eligible(v):
         if args.ids:
             return v["id"] in args.ids
-        if v["id"] in published or v["id"] not in done:
+        if v["id"] in published or v["id"] in drafted or v["id"] not in done:
             return False
         if v.get("cat") == "shorts" or v.get("upcoming"):
             return False

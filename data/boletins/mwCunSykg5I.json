@@ -1,0 +1,18 @@
+{
+ "id": "mwCunSykg5I",
+ "titulo": "Ranking das Camisas Rosa do Santos: 2020 até 2026",
+ "lead": "Felipe Noronha ranqueou todas as camisas rosa do Santos lançadas desde 2020, incluindo a nova de outubro de 2026. O apresentador destacou que nenhuma é feia, mas criticou a camisa 2025 por ser 'sem graça' e mencionou o desinteresse pela camisa 2024. A camisa 2022 (que ele usa) ficou em terceiro lugar, enquanto a de 2020 foi escolhida como segunda melhor. O vídeo também promoveu o jogo contra o São Paulo e pediu comentários dos fãs.",
+ "pontos": [
+  "Camisa Rosa 2025 (última colocada): 'Não lembrava que existia', segundo Felipe Noronha, que a considerou 'sem graça' por falta de detalhes.",
+  "Camisa Rosa 2021: Ficou em penúltimo lugar. O apresentador disse que é 'bonita', mas 'desbotada demais para ser rosa'.",
+  "Camisa Rosa 2024: Ficou na quinta posição. Noronha mencionou que não lembra de ninguém usando e acha que vendeu pouco.",
+  "Camisa Rosa 2023 (rosa choque): Foi citada como 'legal', mas também não teve grande adesão. O apresentador disse que usaria, mas não acha que 'pegue medalha'.",
+  "Camisa Rosa 2022: Ficou em terceiro lugar (bronze). Noronha destacou detalhes no punho e escudo, chamando de 'lindíssima' e 'simples e bonita'.",
+  "Camisa Rosa 2020: Foi escolhida como segunda melhor. O apresentador disse que é 'linda', gosta do rosa choque e mencionou que está no armário dele."
+ ],
+ "fonte_transcricao": "youtube-auto",
+ "parcial": false,
+ "modelo": "qwen/qwen3-8b",
+ "tentativa": 1,
+ "gerado_em": "2026-10-03T01:08:11Z"
+}

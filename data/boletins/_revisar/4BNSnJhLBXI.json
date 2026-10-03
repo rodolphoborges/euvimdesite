@@ -1,0 +1,18 @@
+{
+ "id": "4BNSnJhLBXI",
+ "titulo": "Santos x São Paulo: clássico no Morumbi com curiosidades",
+ "lead": "O Trio discute o jogo entre Santos e São Paulo no Morumbi, destacando a volta de Barreal e Cebolinha, ausência do Neymar e a possibilidade de Coutinho entrar. O frio em São Paulo e a escalação técnica do Santos são temas centrais da live. A equipe terá apenas dois zagueiros relacionados, gerando dúvidas sobre improvisações.",
+ "pontos": [
+  "Santos volta com Barreal e Cebolinha; Razer retorna após virose, mas Neymar e Luan estão ausentes.",
+  "O Morumbi é apelidado de 'estádio mais frio de São Paulo', com previsão de baixa temperatura na noite do jogo.",
+  "Eduardo Jardim afirma que a escalação do Santos será técnica, mas destaca preocupação com a falta de zagueiros reserva.",
+  "Coutinho é o principal nome da curiosidade: 'não vai entrar', segundo Eduardo, mas há expectativa por parte do público.",
+  "A equipe terá apenas dois zagueiros relacionados (Arão e Veríssimo), gerando debate sobre improvisações como Shimit ou Gabriel Menino.",
+  "O jogo é considerado crucial para o Santos: pode conquistar sua quinta vitória seguida fora de casa, algo histórico."
+ ],
+ "fonte_transcricao": "youtube-auto",
+ "parcial": true,
+ "modelo": "qwen/qwen3-8b",
+ "tentativa": 1,
+ "gerado_em": "2026-10-03T01:07:31Z"
+}

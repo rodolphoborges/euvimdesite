@@ -34,7 +34,7 @@ Site estático para acompanhar o canal [@EuVimdeSantos](https://www.youtube.com/
 
 O robô gera rascunhos 1×/semana; publicar é sempre decisão sua, pela issue **Boletins aguardando revisão**:
 
-1. **Chave de LLM** (só para o Actions): secret `BOLETIM_API_KEY` + vars `BOLETIM_API_URL` (ex.: `https://api.openai.com/v1`) e `BOLETIM_MODEL`. Local é grátis com Ollama: instale, rode `ollama pull qwen2.5:7b` e `npm run boletim`.
+1. **Chave de LLM** (só para o Actions): secret `BOLETIM_API_KEY` + vars `BOLETIM_API_URL` (ex.: `https://api.openai.com/v1`) e `BOLETIM_MODEL`. Local é grátis: Ollama (`ollama pull qwen2.5:7b` + `npm run boletim`) ou LM Studio/OpenAI-compatível (`BOLETIM_API_URL=http://host:1234/v1 npm run boletim -- --provider api --model <nome>`).
 2. **Aprovar:** *Actions → boletim → Run workflow → modo=revisar, acao=aprovar* (ids vazios = todos). **Reprovar:** mesmo caminho com `acao=reprovar`.
 3. **Regenerar:** *modo=gerar* com `ids` + `instrucao` (ex.: `mais curto`) — a tentativa nova sobrescreve o rascunho.
 
