@@ -5,7 +5,7 @@ import Rail from '../../components/Rail.astro';
 import Player from '../../components/Player.astro';
 import Sponsor from '../../components/Sponsor.astro';
 import { sponsorsOfVideo } from '../../lib/sponsors.mjs';
-import { videos, longs, site, CATS, transcript } from '../../lib/data.mjs';
+import { videos, longs, site, CATS, transcript, boletim } from '../../lib/data.mjs';
 import { href, thumb, thumbHq, ytUrl, compact, fmtSecs, fmtDate } from '../../lib/format.mjs';
 import { esc } from '../../../scripts/lib/util.mjs';
 
@@ -14,6 +14,7 @@ export function getStaticPaths() {
 }
 const { v } = Astro.props;
 const tr = transcript(v.id);
+const bol = boletim(v.id);
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 const related = videos.filter(x => x.id !== v.id && x.cat === v.cat && x.cat !== 'shorts').slice(0, 10);
@@ -84,6 +85,14 @@ const share = encodeURIComponent(`${v.title} ${pageUrl}`);
           <button class="btn" type="button" data-copy={pageUrl}>Copiar link</button>
         </div>
         {descHtml && <section class="desc"><h2 class="sr">Descrição</h2><p set:html={descHtml} /></section>}
+        {bol?.titulo && (
+          <section class="boletim">
+            <p class="hero-k"><span class="pill">Boletim</span> resumo automático revisado</p>
+            <h2>{bol.titulo}</h2>
+            <p>{bol.lead}</p>
+            <ul>{bol.pontos.map(p => <li>{p}</li>)}</ul>
+          </section>
+        )}
         {paras.length > 0 && (
           <section class="transcricao" id="transcricao">
             <details open={paras.length <= 12 ? true : undefined}>

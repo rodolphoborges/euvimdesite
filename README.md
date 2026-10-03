@@ -12,6 +12,7 @@ Site estático para acompanhar o canal [@EuVimdeSantos](https://www.youtube.com/
 |---|---|
 | `scripts/fetch.mjs` | Lê o RSS do canal e a YouTube Data API: percorre **todo** o acervo, atualiza views/curtidas/comentários/duração, detecta lives e shorts, categoriza e busca os canais indicados. Grava `data/*.json`. Zero dependências. |
 | `scripts/transcribe.py` | Transcreve os vídeos em pt-BR, do mais novo ao mais antigo: usa a legenda do YouTube quando existe, senão baixa só o áudio e roda o **Whisper** (faster-whisper, CPU). Grava `data/transcripts/<id>.json`. |
+| `scripts/boletim.py` | Gera **rascunhos** de boletim (resumo jornalístico) a partir da transcrição corrigida: Ollama local (grátis) ou API compatível com OpenAI. Grava `data/boletins/_revisar/<id>.json`. **Nunca publica sozinho.** |
 | `src/` (Astro) | Gera o site como HTML estático puro, praticamente sem JavaScript. O player do YouTube só carrega no clique. |
 | Pagefind | Índice de busca estático e fatiado, gerado no build; indexa títulos, descrições e transcrições. |
 | `.github/workflows/pipeline.yml` | 3×/dia: coleta → commit dos dados → build → deploy. Também republica após cada push e após cada rodada de transcrição. |
@@ -28,6 +29,16 @@ Site estático para acompanhar o canal [@EuVimdeSantos](https://www.youtube.com/
 
    O uso fica em ~100–200 unidades por dia, contra 10.000 da cota grátis. Sem a chave o site continua funcionando, só com os ~15 vídeos mais recentes do RSS.
 3. Rode *Actions → pipeline → Run workflow* e *Actions → transcribe → Run workflow* pela primeira vez.
+
+### Boletins (com revisão)
+
+O robô gera rascunhos 1×/semana; publicar é sempre decisão sua, pela issue **Boletins aguardando revisão**:
+
+1. **Chave de LLM** (só para o Actions): secret `BOLETIM_API_KEY` + vars `BOLETIM_API_URL` (ex.: `https://api.openai.com/v1`) e `BOLETIM_MODEL`. Local é grátis com Ollama: instale, rode `ollama pull qwen2.5:7b` e `npm run boletim`.
+2. **Aprovar:** *Actions → boletim → Run workflow → modo=revisar, acao=aprovar* (ids vazios = todos). **Reprovar:** mesmo caminho com `acao=reprovar`.
+3. **Regenerar:** *modo=gerar* com `ids` + `instrucao` (ex.: `mais curto`) — a tentativa nova sobrescreve o rascunho.
+
+O site só lê `data/boletins/<id>.json`; rascunhos em `_revisar/` nunca vão ao ar.
 
 ### Personalizar
 

@@ -188,6 +188,12 @@ button, input { font: inherit; color: inherit; }
 .desc { background: var(--s1); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; margin-top: 22px; color: var(--tx2); font-size: 15px; overflow-wrap: anywhere; }
 .desc p { margin: 0; }
 .desc a { color: var(--gold); }
+/* ---------- boletim (resumo revisado) ---------- */
+.boletim { margin-top: 22px; background: var(--s1); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--r); padding: 18px 20px; }
+.boletim .hero-k { margin: 0; }
+.boletim h2 { font: 900 22px/1.1 var(--display); text-transform: uppercase; margin: 10px 0 8px; }
+.boletim p { margin: 0; color: var(--tx2); font-size: 15px; }
+.boletim ul { margin: 12px 0 0; padding-left: 20px; color: var(--tx2); font-size: 15px; display: grid; gap: 6px; }
 .transcricao { margin-top: 22px; background: var(--s1); border: 1px solid var(--line); border-radius: var(--r); }
 .transcricao summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 18px 20px; }
 .transcricao summary::-webkit-details-marker { display: none; }

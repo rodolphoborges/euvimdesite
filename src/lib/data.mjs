@@ -20,6 +20,8 @@ let files = [];
 try { files = readdirSync('data/transcripts').filter(f => f.endsWith('.json')); } catch {}
 export const transcribed = new Set(files.map(f => f.slice(0, -5)));
 export const transcript = id => transcribed.has(id) ? read(`data/transcripts/${id}.json`, null) : null;
+// Boletins: lê SOMENTE publicados. Rascunhos vivem em data/boletins/_revisar/ e nunca chegam aqui.
+export const boletim = id => read(`data/boletins/${id}.json`, null);
 
 export const now = Date.now();
 export const PAGE = site.pageSize || 48;

@@ -1,0 +1,107 @@
+name: boletim
+# Boletins com revisão humana: o robô só gera RASCUNHOS, nunca publica sozinho.
+# - Gerar: 1x/semana + manual (Actions → boletim → modo=gerar).
+# - Revisar: manual (modo=revisar, aprovar/reprovar, ids vazios = todos).
+# - Regenerar: manual (modo=gerar, ids + instrucao).
+# O site só lê data/boletins/<id>.json; _revisar/ nunca vai ao ar.
+# Requer: secret BOLETIM_API_KEY + vars BOLETIM_API_URL e BOLETIM_MODEL.
+on:
+  schedule:
+    - cron: '30 12 * * 1'
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: 'gerar (rascunhos) ou revisar (publica/remove)'
+        default: gerar
+        type: choice
+        options: [gerar, revisar]
+      acao:
+        description: 'revisar: aprovar move ao ar, reprovar apaga'
+        default: aprovar
+        type: choice
+        options: [aprovar, reprovar]
+      ids:
+        description: 'ids separados por espaço (vazio = todos pendentes / próximos da fila)'
+        default: ''
+        type: string
+      limite:
+        description: 'gerar: máx. de rascunhos'
+        default: '3'
+        type: string
+      instrucao:
+        description: 'regenerar: pedido livre anexado ao prompt (ex.: mais curto)'
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  gerar:
+    if: github.event_name == 'schedule' || inputs.modo == 'gerar'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          ARGS="--provider api --limit ${{ inputs.limite || '3' }}"
+          [ -n "${{ inputs.ids }}" ] && ARGS="$ARGS --ids ${{ inputs.ids }}"
+          [ -n "${{ inputs.instrucao }}" ] && ARGS="$ARGS --instrucao ${{ inputs.instrucao }}"
+          python scripts/boletim.py $ARGS
+        env:
+          BOLETIM_API_URL: ${{ vars.BOLETIM_API_URL }}
+          BOLETIM_API_KEY: ${{ secrets.BOLETIM_API_KEY }}
+          BOLETIM_MODEL: ${{ vars.BOLETIM_MODEL }}
+      - name: commit dos rascunhos
+        run: |
+          git config user.name "evs-bot"
+          git config user.email "evs-bot@users.noreply.github.com"
+          git add data/boletins/ data/boletim-state.json
+          git diff --cached --quiet && exit 0
+          git commit -m "boletim: atualiza rascunhos $(date -u +%F)"
+          for i in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            sleep $((i * 10))
+          done
+          exit 1
+
+  revisar:
+    if: github.event_name == 'workflow_dispatch' && inputs.modo == 'revisar'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/boletim.py --revisar ${{ inputs.acao }} --ids ${{ inputs.ids }}
+      - name: commit da revisão
+        run: |
+          git config user.name "evs-bot"
+          git config user.email "evs-bot@users.noreply.github.com"
+          git add data/boletins/
+          git diff --cached --quiet && exit 0
+          git commit -m "boletim: ${{ inputs.acao }} ${{ inputs.ids }}"
+          for i in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            sleep $((i * 10))
+          done
+          exit 1
+
+  fila:
+    needs: [gerar, revisar]
+    if: always() && (needs.gerar.result == 'success' || needs.revisar.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/boletim.py --fila

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "fetch": "node scripts/fetch.mjs",
+    "boletim": "python scripts/boletim.py --limit 3",
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview"
