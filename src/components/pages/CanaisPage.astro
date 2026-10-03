@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import { canais, now, canalNota, tv } from '../../lib/data.mjs';
+import { href, thumb, compact, ago } from '../../lib/format.mjs';
+import { t } from '../../lib/i18n.mjs';
+const { locale = 'pt' } = Astro.props;
+const T = (k: string, v?: Record<string, string>) => t(locale, k, v);
+const L = (p = '') => href(p, locale);
+---
+<Base title={T('canais_title')} desc={T('canais_desc')} nav="canais" locale={locale}>
+  <div class="wrap page">
+    <header class="page-h"><h1>{T('canais_title')}</h1><p>{T('canais_intro')}</p></header>
+    {canais.length === 0 && <p class="vazio">{T('canais_empty')}</p>}
+    {canais.map(c => {
+      const nota = canalNota(locale, c.handle) || c.nota;
+      const latest = (c.latest || []).filter(x => !x.short).slice(0, 10).map(x => tv(locale, x));
+      return (
+        <section class="canal">
+          <header class="canal-h">
+            {c.avatar ? <img src={c.avatar} alt="" width="88" height="88" loading="lazy"> : <span class="avatar-ph big">{(c.title || c.handle).replace('@', '')[0]}</span>}
+            <div>
+              <h2>{c.title || c.handle}</h2>
+              <p class="canal-k">{c.handle}{c.subs ? ` · ${compact(c.subs, locale)} ${T('canais_subs')}` : ''}{c.videos ? ` · ${compact(c.videos, locale)} ${T('canais_vids')}` : ''}</p>
+              {nota && <p>{nota}</p>}
+            </div>
+            <a class="btn btn-gold" href={`https://www.youtube.com/${c.handle}?sub_confirmation=1`} target="_blank" rel="noopener">{T('canais_open')}</a>
+          </header>
+          {latest.length > 0 && (
+            <div class="rail-track">
+              {latest.map(x => (
+                <a class="card" href={`https://www.youtube.com/watch?v=${x.id}`} target="_blank" rel="noopener">
+                  <span class="thumb"><img src={thumb(x.id)} alt="" width="320" height="180" loading="lazy" decoding="async"></span>
+                  <span class="card-body"><span class="kicker">{ago(x.published, now, locale)}</span><span class="card-title">{x.title}</span>{x.views > 0 && <span class="card-meta">{compact(x.views, locale)} {T('card_views')}</span>}</span>
+                </a>
+              ))}
+            </div>
+          )}
+        </section>
+      );
+    })}
+  </div>
+</Base>

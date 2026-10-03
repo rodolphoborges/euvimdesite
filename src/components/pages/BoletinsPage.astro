@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import { boletinsT } from '../../lib/data.mjs';
+import { href, thumb, fmtDate } from '../../lib/format.mjs';
+import { t } from '../../lib/i18n.mjs';
+const { locale = 'pt' } = Astro.props;
+const T = (k: string, v?: Record<string, string>) => t(locale, k, v);
+const L = (p = '') => href(p, locale);
+const items = boletinsT(locale);
+---
+<Base title={T('bol_title')} desc={T('bol_desc')} locale={locale}>
+  <div class="wrap page">
+    <header class="page-h"><h1>{T('bol_h1')}</h1><p>{T('bol_intro')}</p></header>
+    {items.length === 0 && <p class="vazio">{T('bol_empty')}</p>}
+    <div class="bol-list">
+      {items.map(b => (
+        <a class="bol" href={L(`v/${b.id}/#boletim`)}>
+          <span class="thumb"><img src={thumb(b.id)} alt="" width="320" height="180" loading="lazy" decoding="async"></span>
+          <span class="bol-body">
+            <span class="kicker"><span class="pill">{T('bol_pill')}</span> {fmtDate(b.published, undefined, locale)}</span>
+            <span class="card-title">{b.titulo}</span>
+            <span class="card-meta">{b.video}</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>
+<style>
+  .bol-list { display: grid; gap: 14px; }
+  .bol { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 14px; background: var(--s1); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+  .bol:hover { border-color: var(--gold); }
+  .bol .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 16/9; }
+  .bol-body { padding: 12px 14px 12px 0; display: grid; gap: 6px; align-content: start; }
+  .bol .kicker { display: flex; align-items: center; gap: 8px; }
+  @media (max-width: 560px) { .bol { grid-template-columns: 120px minmax(0, 1fr); } }
+</style>

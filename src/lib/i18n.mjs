@@ -19,18 +19,23 @@ export const t = (locale, key, vars) => {
 export const catName = (locale, cat) => t(locale, 'cat_' + cat);
 export const catIntro = (locale, cat) => t(locale, 'intro_' + cat);
 
-// Locale a partir do caminho (/en/..., /es/...; raiz = pt). Rota sem prefixo = pt.
+// Locale a partir do caminho (com ou sem base). Rota sem prefixo = pt.
 export const localeOf = (pathname = '/') => {
-  const seg = String(pathname).replace(/^\/(euvimdesite\/)?/, '').split('/')[0];
-  return isLocale(seg) && seg !== 'pt' ? seg : 'pt';
+  const segs = String(pathname).split('/');
+  const hit = segs.find(s => s === 'en' || s === 'es');
+  return hit || 'pt';
 };
 
-// Alternativas de idioma para a página atual (troca o prefixo, mantém o resto).
+// Caminho sem o prefixo de idioma (para o x-default/canonical PT).
+export const unprefix = (pathname = '/') => String(pathname).replace(/\/(en|es)(?=\/|$)/, '');
+
+// Alternativas de idioma para a página atual (troca o prefixo, mantém o resto e a base).
 export const altLocales = (pathname = '/') => {
   const cur = localeOf(pathname);
-  const base = String(pathname).replace(/^\/(euvimdesite\/)?(en|es)(?=\/|$)/, '/');
+  const base = unprefix(pathname);
+  const withPrefix = l => base.replace(/^(\/[^/]+)(\/|$)/, `$1/${l}$2`);
   return LOCALES.filter(l => l !== cur).map(l => ({
     locale: l,
-    href: (l === 'pt' ? base : `/${l}${base === '/' ? '' : base}`).replace(/\/\//g, '/'),
+    href: l === 'pt' ? base : withPrefix(l),
   }));
 };

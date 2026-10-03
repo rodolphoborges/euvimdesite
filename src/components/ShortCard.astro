@@ -1,9 +1,10 @@
 ---
 import { thumbHq, ytUrl, compact } from '../lib/format.mjs';
-const { v } = Astro.props;
+import { t } from '../lib/i18n.mjs';
+const { v, locale = 'pt' } = Astro.props;
 ---
 <a class="short" href={ytUrl(v)} target="_blank" rel="noopener">
   <img src={thumbHq(v.id)} alt="" width="180" height="320" loading="lazy" decoding="async">
   <span>{v.title}</span>
-  {v.views > 0 && <small>{compact(v.views)} views</small>}
+  {v.views > 0 && <small>{compact(v.views, locale)} {t(locale, 'card_views')}</small>}
 </a>

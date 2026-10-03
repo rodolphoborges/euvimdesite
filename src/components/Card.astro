@@ -1,19 +1,20 @@
 ---
 import { transcribed, now } from '../lib/data.mjs';
 import { thumb, videoHref, kicker, compact, fmtSecs } from '../lib/format.mjs';
-const { v, eager = false } = Astro.props;
+import { t } from '../lib/i18n.mjs';
+const { v, eager = false, locale = 'pt' } = Astro.props;
 const ext = v.cat === 'shorts';
 ---
-<a class="card" href={videoHref(v)} target={ext ? '_blank' : undefined} rel={ext ? 'noopener' : undefined}>
+<a class="card" href={videoHref(v, locale)} target={ext ? '_blank' : undefined} rel={ext ? 'noopener' : undefined}>
   <span class="thumb">
     <img src={thumb(v.id)} alt="" width="320" height="180" loading={eager ? undefined : 'lazy'} decoding="async">
     {v.secs > 0 && <span class="dur">{fmtSecs(v.secs)}</span>}
-    {v.upcoming && <span class="tag-live">AO VIVO</span>}
-    {transcribed.has(v.id) && <span class="tag-tx" title="Com transcrição">TXT</span>}
+    {v.upcoming && <span class="tag-live">{t(locale, 'tag_live')}</span>}
+    {transcribed.has(v.id) && <span class="tag-tx" title={t(locale, 'tag_txt_t')}>{t(locale, 'tag_txt')}</span>}
   </span>
   <span class="card-body">
-    <span class="kicker">{kicker(v, now)}</span>
+    <span class="kicker">{kicker(v, now, locale)}</span>
     <span class="card-title">{v.title}</span>
-    {v.views > 0 && <span class="card-meta">{compact(v.views)} views</span>}
+    {v.views > 0 && <span class="card-meta">{compact(v.views, locale)} {t(locale, 'card_views')}</span>}
   </span>
 </a>

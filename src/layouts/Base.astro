@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Social from '../components/Social.astro';
 import { site, updated } from '../lib/data.mjs';
 import { href, fmtDate } from '../lib/format.mjs';
+import { t, altLocales, unprefix } from '../lib/i18n.mjs';
 
 interface Props {
   title?: string;
@@ -11,16 +12,22 @@ interface Props {
   ogType?: string;
   nav?: string;
   noindex?: boolean;
+  locale?: string;
 }
-const { title = '', desc = site.tagline, image = '', ogType = 'website', nav = '', noindex = false } = Astro.props;
-const full = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
+const { title = '', desc = '', image = '', ogType = 'website', nav = '', noindex = false, locale = 'pt' } = Astro.props;
+const T = (k: string, v?: Record<string, string>) => t(locale, k, v);
+const L = (p = '') => href(p, locale);
+const full = title ? `${title} — ${site.name}` : `${site.name} — ${T('site_tagline')}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const canonicalPt = new URL(unprefix(Astro.url.pathname), Astro.site).href;
+const htmlLang = locale === 'pt' ? 'pt-BR' : locale;
+const ogLocale = locale === 'pt' ? 'pt_BR' : locale === 'en' ? 'en_US' : 'es_ES';
 const links = [
-  ['videos/', 'Vídeos', 'videos'],
-  ['categoria/lives/', 'Lives', 'lives'],
-  ['canais/', 'Canais', 'canais'],
-  ['parceiros/', 'Parceiros', 'parceiros'],
-  ['sobre/', 'Sobre', 'sobre'],
+  ['videos/', T('nav_videos'), 'videos'],
+  ['categoria/lives/', T('nav_lives'), 'lives'],
+  ['canais/', T('nav_canais'), 'canais'],
+  ['parceiros/', T('nav_parceiros'), 'parceiros'],
+  ['sobre/', T('nav_sobre'), 'sobre'],
 ];
 const icons = {
   home: 'M12 3 3 10v11h6v-6h6v6h6V10z',
@@ -28,26 +35,29 @@ const icons = {
   busca: 'M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3m0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10',
   canais: 'M7 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8m10 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6M1 20c0-3.3 2.7-6 6-6s6 2.7 6 6zm13 0c0-1.9-.7-3.7-1.9-5 1.2-.6 2.5-1 3.9-1 3.3 0 6 2.2 6 5v1z',
 };
-const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'videos'], ['busca/', 'Buscar', 'busca', 'busca'], ['canais/', 'Canais', 'canais', 'canais']];
+const tabs = [['', T('tab_home'), 'home', ''], ['videos/', T('tab_videos'), 'videos', 'videos'], ['busca/', T('tab_search'), 'busca', 'busca'], ['canais/', T('tab_canais'), 'canais', 'canais']];
+const langs = altLocales(Astro.url.pathname);
 ---
 <!doctype html>
-<html lang="pt-BR">
+<html lang={htmlLang}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{full}</title>
-<meta name="description" content={desc}>
+<meta name="description" content={desc || T('site_desc')}>
 <link rel="canonical" href={canonical}>
+{langs.map(a => <link rel="alternate" hreflang={a.locale} href={new URL(a.href, Astro.site).href}>)}
+<link rel="alternate" hreflang="x-default" href={canonicalPt}>
 {noindex && <meta name="robots" content="noindex">}
 <meta name="theme-color" content="#0b0b0f">
-<link rel="icon" href={href('favicon.svg')} type="image/svg+xml">
-<link rel="manifest" href={href('manifest.webmanifest')}>
-<link rel="alternate" type="application/rss+xml" title={site.name} href={href('feed.xml')}>
+<link rel="icon" href={L('favicon.svg')} type="image/svg+xml">
+<link rel="manifest" href={L('manifest.webmanifest')}>
+<link rel="alternate" type="application/rss+xml" title={site.name} href={L(locale === 'pt' ? 'feed.xml' : `feed-${locale}.xml`)}>
 <link rel="preconnect" href="https://i.ytimg.com">
 <meta property="og:site_name" content={site.name}>
-<meta property="og:locale" content="pt_BR">
+<meta property="og:locale" content={ogLocale}>
 <meta property="og:title" content={title || site.name}>
-<meta property="og:description" content={desc}>
+<meta property="og:description" content={desc || T('site_desc')}>
 <meta property="og:type" content={ogType}>
 <meta property="og:url" content={canonical}>
 {image && <meta property="og:image" content={image}>}
@@ -55,29 +65,32 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
 <slot name="head" />
 </head>
 <body>
-<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<a class="skip" href="#conteudo">{T('skip_link')}</a>
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href={href()} aria-label={`${site.name} — início`}>
-      <img src={href('logo.svg')} width="36" height="36" alt="">
-      <span><strong>EU VIM DE SANTOS</strong><small>por {site.author}</small></span>
+    <a class="brand" href={L()} aria-label={T('brand_home')}>
+      <img src={L('logo.svg')} width="36" height="36" alt="">
+      <span><strong>EU VIM DE SANTOS</strong><small>{T('brand_tag')}</small></span>
     </a>
-    <nav class="menu" aria-label="Principal">
-      {links.map(([p, label, key]) => <a href={href(p)} aria-current={nav === key ? 'page' : undefined}>{label}</a>)}
+    <nav class="menu" aria-label={T('menu_label')}>
+      {links.map(([p, label, key]) => <a href={L(p)} aria-current={nav === key ? 'page' : undefined}>{label}</a>)}
     </nav>
-    <form class="busca" action={href('busca/')} role="search">
-      <label class="sr" for="q-top">Buscar</label>
-      <input id="q-top" name="q" type="search" placeholder="Buscar vídeos e falas…" autocomplete="off">
-      <button type="submit" aria-label="Buscar"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={icons.busca} /></svg></button>
+    <form class="busca" action={L('busca/')} role="search">
+      <label class="sr" for="q-top">{T('search_label')}</label>
+      <input id="q-top" name="q" type="search" placeholder={T('search_ph')} autocomplete="off">
+      <button type="submit" aria-label={T('search_label')}><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={icons.busca} /></svg></button>
     </form>
-    <a class="btn-sub" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">Inscrever-se</a>
+    <a class="btn-sub" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">{T('subscribe')}</a>
+    <nav class="langs" aria-label="Language / Idioma">
+      {langs.map(a => <a href={a.href} hreflang={a.locale}>{a.locale}</a>)}
+    </nav>
     <details class="mnav">
-      <summary aria-label="Menu"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></summary>
-      <nav aria-label="Menu">
-        {links.map(([p, label, key]) => <a class="mlink" href={href(p)} aria-current={nav === key ? 'page' : undefined}>{label}</a>)}
-        <a class="btn btn-gold m-cta" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">Inscrever-se no canal</a>
+      <summary aria-label={T('menu_label')}><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></summary>
+      <nav aria-label={T('menu_label')}>
+        {links.map(([p, label, key]) => <a class="mlink" href={L(p)} aria-current={nav === key ? 'page' : undefined}>{label}</a>)}
+        <a class="btn btn-gold m-cta" href={`https://www.youtube.com/${site.channelHandle}?sub_confirmation=1`} target="_blank" rel="noopener">{T('subscribe_channel')}</a>
         <div class="m-soc">
-          <span>Acompanhe</span>
+          <span>{T('menu_follow')}</span>
           <div class="soc-row">
             {(site.social?.canal || []).map(s => <Social item={s} />)}
             {(site.social?.autor || []).map(s => <Social item={s} />)}
@@ -94,16 +107,16 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
   <div class="wrap foot-in">
     <div>
       <strong>{site.name}</strong>
-      <p>Site de fã, complementar ao canal de {site.author}. Sem afiliação com o Santos FC nem com o YouTube. Os vídeos pertencem aos seus autores e são exibidos pelo player oficial do YouTube.</p>
+      <p>{T('foot_fan', { a: site.author })}</p>
     </div>
-    <nav aria-label="Rodapé">
-      <a href={href('videos/')}>Arquivo completo</a>
-      <a href={href('boletins/')}>Boletins</a>
-      <a href={href('canais/')}>Canais indicados</a>
-      <a href={href('parceiros/')}>Parceiros e cupons</a>
-      <a href={href('sobre/#remocao')}>Aviso legal e remoção</a>
-      <a href={href('feed.xml')}>RSS</a>
-      <a href={site.repoUrl} rel="noopener">Código-fonte</a>
+    <nav aria-label={T('menu_label')}>
+      <a href={L('videos/')}>{T('foot_archive')}</a>
+      <a href={L('boletins/')}>{T('foot_boletins')}</a>
+      <a href={L('canais/')}>{T('foot_canais')}</a>
+      <a href={L('parceiros/')}>{T('foot_parceiros')}</a>
+      <a href={L('sobre/#remocao')}>{T('foot_legal')}</a>
+      <a href={L(locale === 'pt' ? 'feed.xml' : `feed-${locale}.xml`)}>{T('foot_rss')}</a>
+      <a href={site.repoUrl} rel="noopener">{T('foot_source')}</a>
     </nav>
     <div class="foot-soc">
       <div>
@@ -118,11 +131,11 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
       </div>
     </div>
   </div>
-  <p class="wrap foot-upd">Atualizado automaticamente · dados de {fmtDate(updated, { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+  <p class="wrap foot-upd">{T('foot_updated', { d: fmtDate(updated, { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }, locale) })}</p>
 </footer>
-<nav class="tabbar" aria-label="Atalhos">
+<nav class="tabbar" aria-label={T('tab_label')}>
   {tabs.map(([p, label, ic, key]) => (
-    <a href={href(p)} aria-current={nav === key || (!key && !nav) ? 'page' : undefined}>
+    <a href={L(p)} aria-current={nav === key || (!key && !nav) ? 'page' : undefined}>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={icons[ic]} /></svg>{label}
     </a>
   ))}
@@ -152,9 +165,15 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
     const cp = t.closest<HTMLButtonElement>('[data-copy]');
     if (cp) {
       const txt = cp.dataset.copy || location.href;
+      const lang = (document.documentElement.lang || 'pt').slice(0, 2);
+      const msg = {
+        pt: ['Copiado ✓', 'Não copiou — tente de novo'],
+        en: ['Copied ✓', 'Copy failed — try again'],
+        es: ['Copiado ✓', 'No se copió — intenta de nuevo'],
+      }[lang] || ['Copiado ✓', 'Não copiou — tente de novo'];
       const done = (ok: boolean) => {
         const old = cp.textContent;
-        cp.textContent = ok ? 'Copiado ✓' : 'Não copiou — tente de novo';
+        cp.textContent = ok ? msg[0] : msg[1];
         setTimeout(() => (cp.textContent = old), 1800);
       };
       if (navigator.clipboard?.writeText) {

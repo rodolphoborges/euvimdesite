@@ -6,7 +6,7 @@
     "fetch": "node scripts/fetch.mjs",
     "boletim": "python scripts/boletim.py --limit 3",
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && node scripts/pagefind-i18n.mjs",
     "preview": "astro preview"
   },
   "engines": {

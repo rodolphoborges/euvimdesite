@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import { href } from '../../lib/format.mjs';
+import { t } from '../../lib/i18n.mjs';
+const { locale = 'pt' } = Astro.props;
+const T = (k: string, v?: Record<string, string>) => t(locale, k, v);
+const pf = href('pagefind/pagefind.js', locale);
+const STR = {
+  ing: T('busca_ing'), r1: T('busca_r1'), rn: T('busca_rn'),
+  no: T('busca_no'), err: T('busca_err'),
+};
+---
+<Base title={T('busca_h')} nav="busca" noindex locale={locale}>
+  <div class="wrap page">
+    <header class="page-h"><h1>{T('busca_h')}</h1><p set:html={T('busca_intro')} /></header>
+    <form class="busca-big" role="search" id="busca-form">
+      <label class="sr" for="q">{T('busca_term')}</label>
+      <input id="q" name="q" type="search" placeholder={T('busca_ex')} autocomplete="off">
+      <button class="btn btn-gold" type="submit">{T('search_label')}</button>
+    </form>
+    <p class="busca-st" id="busca-st" aria-live="polite"></p>
+    <div class="busca-res" id="busca-res"></div>
+  </div>
+</Base>
+<script is:inline type="module" define:vars={{ pf, STR }}>
+  // Pagefind: índice estático fatiado, só baixa o necessário para cada busca.
+  const form = document.getElementById('busca-form');
+  const input = document.getElementById('q');
+  const st = document.getElementById('busca-st');
+  const out = document.getElementById('busca-res');
+  let pagefind = null;
+  const load = async () => (pagefind ||= await import(pf).then(m => (m.options({ excerptLength: 30 }), m)));
+  let seq = 0;
+  async function run(q) {
+    const my = ++seq;
+    q = q.trim();
+    const url = new URL(location.href);
+    q ? url.searchParams.set('q', q) : url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+    if (!q) { out.innerHTML = ''; st.textContent = ''; return; }
+    st.textContent = STR.ing;
+    try {
+      const p = await load();
+      const r = await p.debouncedSearch(q, {}, 250);
+      if (!r || my !== seq) return;
+      const items = await Promise.all(r.results.slice(0, 30).map(x => x.data()));
+      if (my !== seq) return;
+      st.textContent = r.results.length ? (r.results.length === 1 ? STR.r1 : STR.rn.replace('{n}', String(r.results.length))) : STR.no;
+      out.innerHTML = items.map(d => {
+        const t = String(d.meta.title || '').replace(/ — Eu Vim de Santos$/, '').replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
+        return `<a class="res" href="${d.url}">${d.meta.image ? `<img src="${d.meta.image}" alt="" loading="lazy" width="320" height="180">` : '<span></span>'}<span><strong>${t}</strong><p>${d.excerpt}</p></span></a>`;
+      }).join('');
+    } catch (e) {
+      st.textContent = STR.err;
+    }
+  }
+  form.addEventListener('submit', e => { e.preventDefault(); run(input.value); });
+  input.addEventListener('input', () => run(input.value));
+  const q0 = new URLSearchParams(location.search).get('q');
+  if (q0) { input.value = q0; run(q0); }
+  // no celular o foco automático abre o teclado e empurra a página — só foca com mouse/teclado físico
+  else if (matchMedia('(hover: hover) and (pointer: fine)').matches) input.focus();
+</script>

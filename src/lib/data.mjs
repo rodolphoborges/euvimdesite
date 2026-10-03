@@ -60,6 +60,12 @@ export const boletins = bolFiles.map(f => {
   const v = _vById.get(f.slice(0, -5));
   return b?.titulo && v ? { id: v.id, titulo: b.titulo, lead: b.lead, video: v.title, published: v.published } : null;
 }).filter(Boolean).sort((a, b) => b.published.localeCompare(a.published));
+// Boletim com título traduzido quando houver (fallback: PT).
+export const boletinsT = locale => boletins.map(b => {
+  if (locale === 'pt') return b;
+  const tb = boletimT(locale, b.id);
+  return tb?.titulo ? { ...b, titulo: tb.titulo } : b;
+});
 
 export const now = Date.now();
 export const PAGE = site.pageSize || 48;

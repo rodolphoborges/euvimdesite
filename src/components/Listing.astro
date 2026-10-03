@@ -3,22 +3,24 @@ import Base from '../layouts/Base.astro';
 import Card from './Card.astro';
 import ShortCard from './ShortCard.astro';
 import Pager from './Pager.astro';
-import { catList, CATS } from '../lib/data.mjs';
+import { catList, tv } from '../lib/data.mjs';
 import { href } from '../lib/format.mjs';
-const { page, cat = '', title, intro, basePath } = Astro.props;
-const chips = [['', 'Tudo', href('videos/')], ...catList.map(c => [c, CATS[c], href(`categoria/${c}/`)])];
-const pageTitle = page.currentPage > 1 ? `${title} — página ${page.currentPage}` : title;
+import { t, catName } from '../lib/i18n.mjs';
+const { page, cat = '', title, intro, basePath, locale = 'pt' } = Astro.props;
+const items = page.data.map(v => tv(locale, v));
+const chips = [['', t(locale, 'chips_all'), href('videos/', locale)], ...catList.map(c => [c, catName(locale, c), href(`categoria/${c}/`, locale)])];
+const pageTitle = page.currentPage > 1 ? `${title} — ${t(locale, 'page_of')} ${page.currentPage}` : title;
 ---
-<Base title={pageTitle} desc={`${title}: vídeos do canal Eu Vim de Santos.`} nav={cat === 'lives' ? 'lives' : 'videos'}>
+<Base title={pageTitle} desc={t(locale, 'list_desc', { t: title })} nav={cat === 'lives' ? 'lives' : 'videos'} locale={locale}>
   <div class="wrap page">
     <header class="page-h"><h1>{title}</h1><p>{intro}</p></header>
-    <nav class="chips" aria-label="Editorias">
+    <nav class="chips" aria-label={t(locale, 'chips_label')}>
       {chips.map(([k, label, h]) => <a href={h} aria-current={k === cat ? 'page' : undefined}>{label}</a>)}
     </nav>
-    {page.data.length === 0 && <p class="vazio">Nada por aqui ainda.</p>}
+    {page.data.length === 0 && <p class="vazio">{t(locale, 'list_empty')}</p>}
     {cat === 'shorts'
-      ? <div class="grid-shorts">{page.data.map(v => <ShortCard v={v} />)}</div>
-      : <div class="grid">{page.data.map((v, i) => <Card v={v} eager={i < 4} />)}</div>}
-    <Pager page={page} basePath={basePath} />
+      ? <div class="grid-shorts">{items.map(v => <ShortCard v={v} locale={locale} />)}</div>
+      : <div class="grid">{items.map((v, i) => <Card v={v} eager={i < 4} locale={locale} />)}</div>}
+    <Pager page={page} basePath={basePath} locale={locale} />
   </div>
 </Base>

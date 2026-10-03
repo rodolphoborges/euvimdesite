@@ -1,0 +1,14 @@
+---
+import Listing from '../../../../components/Listing.astro';
+import { videos, catList, PAGE } from '../../../../lib/data.mjs';
+import { href } from '../../../../lib/format.mjs';
+import { t, catName, catIntro } from '../../../../lib/i18n.mjs';
+const locale = 'es';
+export function getStaticPaths({ paginate }) {
+  return catList.flatMap(cat => paginate(videos.filter(v => v.cat === cat), { params: { cat }, pageSize: cat === 'shorts' ? 60 : PAGE }));
+}
+const { page } = Astro.props;
+const { cat } = Astro.params;
+---
+<Listing page={page} cat={cat} title={catName(locale, cat)} basePath={href(`categoria/${cat}/`, locale)} locale={locale}
+  intro={`${catIntro(locale, cat)} ${t(locale, 'busca_nv', { n: String(page.total) })}.`} />

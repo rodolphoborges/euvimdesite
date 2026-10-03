@@ -1,0 +1,131 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../Card.astro';
+import Rail from '../Rail.astro';
+import Player from '../Player.astro';
+import Sponsor from '../Sponsor.astro';
+import { sponsorsOfVideo } from '../../lib/sponsors.mjs';
+import { videos, longs, site, transcriptT, boletimT, tv } from '../../lib/data.mjs';
+import { href, thumb, thumbHq, ytUrl, compact, fmtSecs, fmtDate } from '../../lib/format.mjs';
+import { t, catName } from '../../lib/i18n.mjs';
+import { esc } from '../../../scripts/lib/util.mjs';
+
+const { v: raw, locale = 'pt' } = Astro.props;
+const T = (k: string, vars?: Record<string, string>) => t(locale, k, vars);
+const L = (p = '') => href(p, locale);
+const v = tv(locale, raw);
+const tr = transcriptT(locale, v.id);
+const bol = boletimT(locale, v.id);
+const pageUrl = new URL(L(`v/${v.id}/`), Astro.site).href;
+
+const rel0 = videos.filter(x => x.id !== v.id && x.cat === v.cat && x.cat !== 'shorts').slice(0, 10);
+const related = rel0.map(x => tv(locale, x));
+const more0 = longs.filter(x => x.id !== v.id && x.cat !== v.cat).slice(0, 12);
+const more = more0.map(x => tv(locale, x));
+const idx = longs.findIndex(x => x.id === v.id);
+const newer0 = idx > 0 ? longs[idx - 1] : null;
+const older0 = idx >= 0 && idx < longs.length - 1 ? longs[idx + 1] : null;
+const newer = newer0 ? tv(locale, newer0) : null;
+const older = older0 ? tv(locale, older0) : null;
+
+const statItems = [
+  v.views && [compact(v.views, locale), T('stat_views')],
+  v.likes && [compact(v.likes, locale), T('stat_likes')],
+  v.comments && [compact(v.comments, locale), T('stat_comments')],
+  v.secs && [fmtSecs(v.secs), T('stat_dur')],
+].filter(Boolean);
+
+// descrição: escapa e transforma URLs em links
+const descHtml = v.desc
+  ? esc(v.desc)
+      .replace(/https?:\/\/[^\s<]+/g, u => `<a href="${u}" rel="nofollow noopener" target="_blank">${u.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60)}</a>`)
+      .replace(/\n/g, '<br>')
+  : '';
+
+// transcrição em parágrafos de ~45 s (texto corrigido pelo glossário, quando houver)
+const tsegs = tr?.segments_fix || tr?.segments;
+const paras = [];
+if (tsegs?.length) {
+  let cur = null;
+  for (const [t0, text] of tsegs) {
+    if (!cur || t0 - cur.t >= 45) { cur = { t: Math.floor(t0), parts: [] }; paras.push(cur); }
+    cur.parts.push(text);
+  }
+}
+const txText = tsegs?.map(s => s[1]).join(' ') || '';
+const words = txText ? txText.split(/\s+/).length : 0;
+const txSource = tr?.source === 'youtube-auto' ? T('tx_src_yt') : tr?.source === 'youtube-manual' ? T('tx_src_yt') : T('tx_src_wh');
+
+const ld = {
+  '@context': 'https://schema.org', '@type': 'VideoObject',
+  name: v.title, description: (v.desc || v.title).slice(0, 500),
+  thumbnailUrl: [thumbHq(v.id)], uploadDate: v.published,
+  embedUrl: `https://www.youtube-nocookie.com/embed/${v.id}`, url: pageUrl,
+  ...(v.secs ? { duration: `PT${v.secs}S` } : {}),
+  ...(v.views ? { interactionStatistic: { '@type': 'InteractionCounter', interactionType: { '@type': 'WatchAction' }, userInteractionCount: v.views } } : {}),
+  ...(txText ? { transcript: txText.slice(0, 5000) } : {}),
+  author: { '@type': 'Person', name: site.author },
+  inLanguage: locale === 'pt' ? 'pt-BR' : locale,
+};
+const sps = [...(sponsorsOfVideo.get(v.id) || [])];
+const share = encodeURIComponent(`${v.title} ${pageUrl}`);
+---
+<Base title={v.title} desc={(v.desc || v.title).split('\n')[0].slice(0, 160)} image={thumbHq(v.id)} ogType="video.other" locale={locale}>
+  <Fragment slot="head">
+    <meta data-pagefind-meta="image" content={thumb(v.id)}>
+    <meta data-pagefind-meta="date" content={v.published.slice(0, 10)}>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(ld).replace(/</g, '\\u003c')} />
+  </Fragment>
+  <article class="wrap video">
+    <nav class="crumbs" aria-label={T('crumb_label')}><a href={L()}>{T('crumb_home')}</a> › <a href={L(`categoria/${v.cat}/`)}>{catName(locale, v.cat)}</a></nav>
+    <div class="video-grid">
+      <div class="video-main" data-pagefind-body>
+        <Player v={v} eager locale={locale} />
+        <h1>{v.title}</h1>
+        <p class="video-k"><span class="pill pill-dark" data-pagefind-filter="editoria">{catName(locale, v.cat)}</span> <time datetime={v.published}>{fmtDate(v.published, { day: '2-digit', month: 'long', year: 'numeric' }, locale)}</time></p>
+        {statItems.length > 0 && <dl class="stats" data-pagefind-ignore>{statItems.map(([b, s]) => <div><dt>{s}</dt><dd>{b}</dd></div>)}</dl>}
+        <div class="acoes" data-pagefind-ignore>
+          <a class="btn btn-gold" href={ytUrl(v)} target="_blank" rel="noopener">{T('act_watch')}</a>
+          <a class="btn" href={`https://wa.me/?text=${share}`} target="_blank" rel="noopener">WhatsApp</a>
+          <button class="btn" type="button" data-copy={pageUrl}>{T('act_copy')}</button>
+        </div>
+        {descHtml && <section class="desc"><h2 class="sr">{T('desc_sr')}</h2><p set:html={descHtml} /></section>}
+        {bol?.titulo && (
+          <details class="boletim" id="boletim">
+            <summary><span class="pill">{T('bol_pill')}</span> <strong>{bol.titulo}</strong></summary>
+            <p class="bol-cap">{T('bol_cap')}</p>
+            <p>{bol.lead}</p>
+            <ul>{bol.pontos.map(p => <li>{p}</li>)}</ul>
+            <p class="bol-todos"><a href={L('boletins/')}>{T('bol_all')}</a></p>
+          </details>
+        )}
+        {paras.length > 0 && (
+          <section class="transcricao" id="transcricao">
+            <details>
+              <summary><h2>{T('tx_h')}</h2><span data-pagefind-ignore>{compact(words, locale)} {T('tx_words')} · {Math.max(1, Math.round(words / 200))} {T('tx_min')}</span></summary>
+              <p class="tx-aviso" data-pagefind-ignore>{T('tx_warn', { s: txSource })}{tr?.glossario && T('tx_gloss')}</p>
+              <div class="tx-body">
+                {paras.map(p => <p><a class="ts" href={`https://youtu.be/${v.id}?t=${p.t}`} data-t={p.t} data-pagefind-ignore>{fmtSecs(p.t)}</a> {p.parts.join(' ')}</p>)}
+              </div>
+            </details>
+          </section>
+        )}
+        <nav class="prevnext" data-pagefind-ignore>
+          {older ? <a href={L(`v/${older.id}/`)}><small>{T('prev_older')}</small>{older.title}</a> : <span></span>}
+          {newer && <a class="nx" href={L(`v/${newer.id}/`)}><small>{T('prev_newer')}</small>{newer.title}</a>}
+        </nav>
+      </div>
+      <aside class="video-side">
+        {sps.length > 0 && (
+          <section class="sp-side" aria-label={T('sp_many')}>
+            <h2>{sps.length > 1 ? T('sp_many') : T('sp_one')}</h2>
+            {sps.map(p => <Sponsor p={p} variant="mini" locale={locale} />)}
+          </section>
+        )}
+        <h2>{related.length ? T('more_cat', { c: catName(locale, v.cat) }) : T('more_canal')}</h2>
+        <div class="side-list">{(related.length ? related : more).map(x => <Card v={x} locale={locale} />)}</div>
+      </aside>
+    </div>
+    {related.length > 0 && more.length > 0 && <Rail title={T('keep_watching')} link={L('videos/')} locale={locale}>{more.map(x => <Card v={x} locale={locale} />)}</Rail>}
+  </article>
+</Base>

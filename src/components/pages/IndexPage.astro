@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../Card.astro';
+import ShortCard from '../ShortCard.astro';
+import Rail from '../Rail.astro';
+import Player from '../Player.astro';
+import Sponsor from '../Sponsor.astro';
+import { destaques } from '../../lib/sponsors.mjs';
+import { videos, longs, shorts, canais, catList, transcribed, now, tv } from '../../lib/data.mjs';
+import { href, thumbHq, ytUrl, kicker, compact, fmtSecs, fmtDate } from '../../lib/format.mjs';
+import { t, catName } from '../../lib/i18n.mjs';
+const { locale = 'pt' } = Astro.props;
+const T = (k: string, v?: Record<string, string>) => t(locale, k, v);
+const L = (p = '') => href(p, locale);
+
+const hero0 = longs[0];
+const hero = hero0 ? tv(locale, hero0) : null;
+const upcoming0 = videos.find(v => v.upcoming);
+const upcoming = upcoming0 ? tv(locale, upcoming0) : null;
+const rest = longs.slice(1).map(v => tv(locale, v));
+const month = longs.filter(v => now - +new Date(v.published) < 30 * 864e5);
+const top = [...month].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10).map(v => tv(locale, v));
+const cats = catList.filter(c => c !== 'shorts').map(c => [c, rest.filter(v => v.cat === c).slice(0, 16)]).filter(([, l]) => l.length);
+const shortsT = shorts.map(v => tv(locale, v));
+---
+<Base image={hero ? thumbHq(hero.id) : ''} locale={locale}>
+  {upcoming && (
+    <a class="aovivo" href={ytUrl(upcoming)} target="_blank" rel="noopener"><span class="dot"></span><b>{T('live_now')}</b> {upcoming.title} <span aria-hidden="true">›</span></a>
+  )}
+  {hero && (
+    <section class="hero wrap">
+      <Player v={hero} eager locale={locale} />
+      <div class="hero-tx">
+        <p class="hero-k"><span class="pill">{T('hero_new')}</span> {kicker(hero, now, locale)}</p>
+        <h1><a href={L(`v/${hero.id}/`)}>{hero.title}</a></h1>
+        <p class="hero-meta">{[hero.views && `${compact(hero.views, locale)} ${T('meta_views')}`, hero.secs && fmtSecs(hero.secs), fmtDate(hero.published, undefined, locale)].filter(Boolean).join(' · ')}</p>
+        {hero.desc && <p class="hero-desc">{hero.desc.split('\n')[0].slice(0, 220)}</p>}
+        <p class="hero-cta">
+          <a class="btn btn-gold" href={L(`v/${hero.id}/`)}>{T('hero_open')}</a>
+          {transcribed.has(hero.id) && <a class="btn" href={L(`v/${hero.id}/#transcricao`)}>{T('hero_tx')}</a>}
+        </p>
+      </div>
+    </section>
+  )}
+  <div class="wrap">
+    <Rail title={T('rail_recent')} link={L('videos/')} locale={locale}>{rest.slice(0, 16).map((v, i) => <Card v={v} eager={i < 4} locale={locale} />)}</Rail>
+    {destaques.length > 0 && (
+      <section class="rail sp-home" aria-label={T('rail_sp')}>
+        <div class="rail-h"><h2>{T('rail_sp')}</h2><a href={L('parceiros/')}>{T('rail_sp_all')} <span aria-hidden="true">›</span></a></div>
+        <div class="sp-row">{destaques.slice(0, 3).map(p => <Sponsor p={p} variant="mini" locale={locale} />)}</div>
+      </section>
+    )}
+    {top.length >= 5 && <Rail title={T('rail_top')} locale={locale}>{top.map(v => <Card v={v} locale={locale} />)}</Rail>}
+    {cats.map(([c, list], i) => (
+      <Fragment>
+        <Rail title={catName(locale, c)} link={L(`categoria/${c}/`)} locale={locale}>{list.map(v => <Card v={v} locale={locale} />)}</Rail>
+        {i === 0 && shortsT.length > 0 && <Rail title={T('rail_minute')} link={L('categoria/shorts/')} cls="rail-shorts" locale={locale}>{shortsT.slice(0, 20).map(v => <ShortCard v={v} locale={locale} />)}</Rail>}
+      </Fragment>
+    ))}
+    {canais.length > 0 && (
+      <section class="rail">
+        <div class="rail-h"><h2>{T('rail_canais')}</h2><a href={L('canais/')}>{T('rail_canais_all')} <span aria-hidden="true">›</span></a></div>
+        <div class="canais-mini">
+          {canais.map(c => (
+            <a class="canal-mini" href={`https://www.youtube.com/${c.handle}`} target="_blank" rel="noopener">
+              {c.avatar ? <img src={c.avatar} alt="" width="56" height="56" loading="lazy"> : <span class="avatar-ph">{(c.title || c.handle).replace('@', '')[0]}</span>}
+              <span><strong>{c.title || c.handle}</strong><small>{c.handle}{c.subs ? ` · ${compact(c.subs, locale)} ${T('subs_label')}` : ''}</small></span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</Base>

@@ -1,6 +1,7 @@
 ---
+import { t } from '../lib/i18n.mjs';
+const { page, basePath, locale = 'pt' } = Astro.props;
 // Paginação numerada a partir do objeto `page` do paginate() do Astro.
-const { page, basePath } = Astro.props;
 const total = page.lastPage, cur = page.currentPage;
 const hrefFor = (n: number) => `${basePath}${n > 1 ? `${n}/` : ''}`;
 const nums = [...new Set([1, total, cur - 1, cur, cur + 1].filter(n => n >= 1 && n <= total))].sort((a, b) => a - b);
@@ -8,9 +9,9 @@ const parts: (number | '…')[] = [];
 nums.forEach((n, i) => { if (i && n - nums[i - 1] > 1) parts.push('…'); parts.push(n); });
 ---
 {total > 1 && (
-  <nav class="pager" aria-label="Paginação">
-    {page.url.prev && <a rel="prev" href={page.url.prev}>‹ Anterior</a>}
+  <nav class="pager" aria-label={t(locale, 'pager_label')}>
+    {page.url.prev && <a rel="prev" href={page.url.prev}>{t(locale, 'pg_prev')}</a>}
     {parts.map(p => p === '…' ? <span class="gap">…</span> : p === cur ? <span aria-current="page">{p}</span> : <a href={hrefFor(p)}>{p}</a>)}
-    {page.url.next && <a rel="next" href={page.url.next}>Próxima ›</a>}
+    {page.url.next && <a rel="next" href={page.url.next}>{t(locale, 'pg_next')}</a>}
   </nav>
 )}

@@ -1,9 +1,9 @@
 ---
-import VideoPage from '../../components/pages/VideoPage.astro';
-import { videos } from '../../lib/data.mjs';
+import VideoPage from '../../../components/pages/VideoPage.astro';
+import { videos } from '../../../lib/data.mjs';
 export function getStaticPaths() {
   return videos.filter(v => v.cat !== 'shorts').map(v => ({ params: { id: v.id }, props: { v } }));
 }
 const { v } = Astro.props;
 ---
-<VideoPage v={v} locale="pt" />
+<VideoPage v={v} locale="en" />

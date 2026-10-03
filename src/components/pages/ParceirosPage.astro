@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sponsor from '../Sponsor.astro';
+import { patrocinadores } from '../../lib/sponsors.mjs';
+import { site } from '../../lib/data.mjs';
+import { t } from '../../lib/i18n.mjs';
+const { locale = 'pt' } = Astro.props;
+const T = (k: string, v?: Record<string, string>) => t(locale, k, v);
+const manuais = patrocinadores.filter(p => p.manual);
+const auto = patrocinadores.filter(p => !p.manual);
+---
+<Base title={T('sp_title')} desc={T('sp_desc')} nav="parceiros" locale={locale}>
+  <div class="wrap page">
+    <header class="page-h"><h1>{T('sp_h1')}</h1><p>{T('sp_intro', { n: site.name })}</p></header>
+    {manuais.length === 0 && auto.length === 0 && <p class="vazio">{T('sp_empty')}</p>}
+    <div class="sp-grid">{manuais.map(p => <Sponsor p={p} locale={locale} />)}</div>
+    {auto.length > 0 && (
+      <section class="sp-auto">
+        <h2 class="sp-sub">{T('sp_outros')}</h2>
+        <div class="sp-grid">{auto.map(p => <Sponsor p={p} locale={locale} />)}</div>
+      </section>
+    )}
+    <p class="sp-note sp-legal">{T('sp_legal')}</p>
+  </div>
+</Base>

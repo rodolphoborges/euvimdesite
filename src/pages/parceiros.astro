@@ -1,25 +1,4 @@
 ---
-import Base from '../layouts/Base.astro';
-import Sponsor from '../components/Sponsor.astro';
-import { patrocinadores } from '../lib/sponsors.mjs';
-import { site } from '../lib/data.mjs';
-const manuais = patrocinadores.filter(p => p.manual);
-const auto = patrocinadores.filter(p => !p.manual);
+import ParceirosPage from '../components/pages/ParceirosPage.astro';
 ---
-<Base title="Parceiros e cupons" desc={`Cupons e ofertas dos parceiros do canal ${site.name}.`} nav="parceiros">
-  <div class="wrap page">
-    <header class="page-h">
-      <h1>Parceiros</h1>
-      <p>Cupons e ofertas de quem apoia o canal. Usar os links e cupons daqui ajuda o {site.name} a continuar no ar.</p>
-    </header>
-    {manuais.length === 0 && auto.length === 0 && <p class="vazio">Nenhum parceiro ativo no momento.</p>}
-    <div class="sp-grid">{manuais.map(p => <Sponsor p={p} />)}</div>
-    {auto.length > 0 && (
-      <section class="sp-auto">
-        <h2 class="sp-sub">Outras ofertas</h2>
-        <div class="sp-grid">{auto.map(p => <Sponsor p={p} />)}</div>
-      </section>
-    )}
-    <p class="sp-note sp-legal">Conteúdo publicitário, identificado conforme o CONAR. Ofertas, preços e cupons são de responsabilidade de cada anunciante.</p>
-  </div>
-</Base>
+<ParceirosPage locale="pt" />

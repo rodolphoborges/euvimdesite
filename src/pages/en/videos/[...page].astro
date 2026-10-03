@@ -1,0 +1,13 @@
+---
+import Listing from '../../../components/Listing.astro';
+import { videos, PAGE } from '../../../lib/data.mjs';
+import { href } from '../../../lib/format.mjs';
+import { t } from '../../../lib/i18n.mjs';
+const locale = 'en';
+export function getStaticPaths({ paginate }) {
+  return paginate(videos.filter(v => v.cat !== 'shorts'), { pageSize: PAGE });
+}
+const { page } = Astro.props;
+---
+<Listing page={page} title={t(locale, 'videos_title')} basePath={href('videos/', locale)} locale={locale}
+  intro={t(locale, 'videos_intro', { n: String(page.total) })} />
