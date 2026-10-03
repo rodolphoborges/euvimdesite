@@ -245,13 +245,16 @@ def fila(repo: str, dry: bool = False):
     for p in sorted(DRAFTS.glob("*.json")):
         d = load_json(p, None)
         if d and d.get("titulo"):
-            pend.append((p.stem, d["titulo"], d.get("tentativa", 1)))
-    body = ["O robô preparou resumos dos vídeos abaixo. Eles ainda NÃO estão no ar — só aparecem no site depois que você aprovar.", ""]
+            pend.append(d)
+    body = ["O robô preparou os resumos abaixo. Eles ainda NÃO estão no ar — só aparecem no site depois que você aprovar.", ""]
     if pend:
-        body += ["| Vídeo | Versão | Ler antes de decidir |", "|---|---|---|"]
-        body += [f"| {t} | {n}ª | [ler rascunho](https://github.com/{repo}/blob/main/data/boletins/_revisar/{v}.json) |" for v, t, n in pend]
-        body += ["",
-                 "Para colocar no ar: aba Actions → workflow boletim → Run workflow, com modo=revisar e acao=aprovar. No campo dos vídeos, deixe vazio para aprovar todos ou escreva os códigos (ex.: `4BNSnJhLBXI`).",
+        for d in pend:
+            body += [f"## {d['titulo']}", "",
+                     f"_Versão {d.get('tentativa', 1)} · código do vídeo: `{d['id']}`_", "",
+                     d["lead"], ""]
+            body += [f"- {pt}" for pt in d.get("pontos", [])]
+            body += ["", f"[ver dados originais](https://github.com/{repo}/blob/main/data/boletins/_revisar/{d['id']}.json)", "", "---", ""]
+        body += ["Para colocar no ar: aba Actions → workflow boletim → Run workflow, com modo=revisar e acao=aprovar. No campo dos vídeos, deixe vazio para aprovar todos ou escreva os códigos.",
                  "Se não gostou e quer descartar: mesmo caminho, com acao=reprovar. O rascunho é apagado e nada vai ao ar.",
                  "Para pedir outra versão: modo=gerar, escreva o código do vídeo e diga o que mudar no campo de instrução (ex.: `mais curto`)."]
     text = "\n".join(body)
