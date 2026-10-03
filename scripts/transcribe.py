@@ -8,6 +8,10 @@ Para cada vídeo:
   1. legendas do YouTube em português (manuais ou automáticas) — segundos, sem custo;
   2. sem legenda: baixa só o áudio e transcreve com faster-whisper (CPU, int8).
 
+Se houver config/glossario.json, aplica a correção do canal (anexa segments_fix
+e "glossario": true, sem apagar o bruto) e usa os termos como initial_prompt
+do Whisper. --recorrect reaplica o glossário aos já transcritos, sem baixar nada.
+
 Respeita um orçamento de tempo (--max-minutes) para terminar antes do limite do
 GitHub Actions. Se o YouTube bloquear (verificação anti-robô / 429), para sem
 marcar falha no vídeo e tenta de novo na próxima execução.
@@ -34,6 +38,56 @@ RETRY_AFTER = timedelta(days=7)
 BLOCK_PATTERNS = re.compile(r"sign in to confirm|not a bot|n[ãa]o [ée] um (rob[ôo]|bot)|confirmar que voc[êe]|http error 429|too many requests|rate.?limit", re.I)
 PT_MANUAL = ("pt-BR", "pt", "pt-PT")
 PT_AUTO = ("pt-orig", "pt", "pt-BR")
+GLOSS = ROOT / "config" / "glossario.json"
+
+
+_gloss_rules = None
+
+
+def load_glossary():
+    """Lista de (regex, forma canônica) do glossário, mais longas primeiro. Cacheada."""
+    global _gloss_rules
+    if _gloss_rules is None:
+        rules = []
+        data = load_json(GLOSS, {"trocas": []})
+        for t in data.get("trocas", []):
+            para = (t.get("para") or "").strip()
+            alts = sorted({a.strip() for a in t.get("de", []) if a and a.strip()}, key=len, reverse=True)
+            if not para or not alts:
+                continue
+            rx = re.compile(r"(?<!\w)(?:" + "|".join(re.escape(a) for a in alts) + r")(?!\w)", re.I)
+            rules.append((rx, para))
+        _gloss_rules = rules
+    return _gloss_rules
+
+
+def glossary_prompt():
+    data = load_json(GLOSS, {"trocas": []})
+    termos = [t["para"] for t in data.get("trocas", []) if t.get("para")]
+    return ("Nomes próprios do canal Eu Vim de Santos: " + ", ".join(termos) + ".") if termos else ""
+
+
+def apply_glossary(text):
+    """Aplica o glossário; devolve (texto, nº de trocas)."""
+    n = 0
+    for rx, para in load_glossary():
+        text, k = rx.subn(para, text)
+        n += k
+    return text, n
+
+
+def with_glossary(res):
+    """Anexa segments_fix + flag sem apagar o bruto."""
+    fixed, n = [], 0
+    for t, text in res["segments"]:
+        ft, k = apply_glossary(text)
+        fixed.append([t, ft])
+        n += k
+    if n:
+        res["segments_fix"] = fixed
+        res["glossario"] = True
+        print(f"  glossário: {n} correções")
+    return res
 
 
 def now_iso() -> str:
@@ -134,6 +188,7 @@ def whisper_transcribe(audio: Path, model_name: str) -> list[list]:
         _model = WhisperModel(model_name, device="cpu", compute_type="int8", cpu_threads=threads)
     segments, _ = _model.transcribe(
         str(audio), language="pt", vad_filter=True, beam_size=1,
+        initial_prompt=glossary_prompt() or None,
         condition_on_previous_text=False, vad_parameters={"min_silence_duration_ms": 700},
     )
     return [[round(s.start, 1), clean(s.text)] for s in segments if clean(s.text)]
@@ -163,7 +218,7 @@ def transcribe_one(v: dict, args, deadline: float) -> dict | None:
                 data = json.loads(ydl.urlopen(sub_url).read().decode("utf-8"))
                 segs = group_segments(words_from_json3(data))
                 if segs:
-                    return {"id": v["id"], "source": source, "lang": "pt-BR", "created": now_iso(), "segments": segs}
+                    return with_glossary({"id": v["id"], "source": source, "lang": "pt-BR", "created": now_iso(), "segments": segs})
         if args.no_whisper:
             return None
         dur = info.get("duration") or v.get("secs") or 0
@@ -181,7 +236,7 @@ def transcribe_one(v: dict, args, deadline: float) -> dict | None:
             segs = whisper_transcribe(files[0], args.model)
         if not segs:
             raise RuntimeError("whisper não reconheceu fala")
-        return {"id": v["id"], "source": f"whisper-{args.model}", "lang": "pt-BR", "created": now_iso(), "segments": segs}
+        return with_glossary({"id": v["id"], "source": f"whisper-{args.model}", "lang": "pt-BR", "created": now_iso(), "segments": segs})
     except DownloadError as e:
         msg = str(e)
         if BLOCK_PATTERNS.search(msg):
@@ -197,6 +252,7 @@ def main():
     ap.add_argument("--force-whisper", action="store_true", help="ignora legendas do YouTube")
     ap.add_argument("--no-whisper", action="store_true", help="usa só legendas do YouTube")
     ap.add_argument("--ids", nargs="*", help="transcreve só estes ids")
+    ap.add_argument("--recorrect", action="store_true", help="reaplica o glossário aos já transcritos, sem baixar nada")
     args = ap.parse_args()
 
     deadline = time.time() + args.max_minutes * 60
@@ -205,6 +261,22 @@ def main():
     state.setdefault("fails", {})
     OUT.mkdir(parents=True, exist_ok=True)
     done = {p.stem for p in OUT.glob("*.json")}
+
+    if args.recorrect:
+        files = sorted(OUT.glob("*.json"))
+        n = 0
+        for p in files:
+            d = load_json(p, None)
+            if not d or not d.get("segments"):
+                continue
+            d.pop("segments_fix", None)
+            d.pop("glossario", None)
+            with_glossary(d)
+            save_json(p, d)
+            if d.get("glossario"):
+                n += 1
+        print(f"recorrigidos: {n} de {len(files)} (bruto preservado)")
+        return
 
     def eligible(v):
         if args.ids:

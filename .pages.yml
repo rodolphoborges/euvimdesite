@@ -51,6 +51,23 @@ content:
           - { name: handle, label: "@handle do YouTube", type: string, required: true }
           - { name: nota, label: Nota curta, type: string }
 
+  - name: glossario
+    label: Glossário do canal (corrige a transcrição)
+    type: file
+    path: config/glossario.json
+    format: json
+    fields:
+      - name: trocas
+        label: Trocas
+        type: object
+        list: true
+        fields:
+          - { name: para, label: Forma correta, type: string, required: true }
+          - name: de
+            label: Variações erradas que aparecem na legenda
+            type: string
+            list: true
+
   - name: overrides
     label: Correção de categorias
     type: file

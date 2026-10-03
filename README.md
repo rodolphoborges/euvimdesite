@@ -36,6 +36,7 @@ Site estático para acompanhar o canal [@EuVimdeSantos](https://www.youtube.com/
 - `config/patrocinadores.json`: parceiros com cupom, link (vira QR code), selo de desconto, logo, cor, validade e destaque na home. O site também **detecta sozinho** cupons e links de anúncio nas descrições dos vídeos: cada página de vídeo mostra o card do parceiro citado nela, e anunciantes ainda não cadastrados aparecem em `/parceiros/` em "Outras ofertas".
 - `config/canais.json`: canais indicados (basta o `@handle` e uma nota).
 - `config/overrides.json`: corrige a categoria de um vídeo específico.
+- `config/glossario.json`: corrige nomes que a legenda automática deturpa (vale para a transcrição exibida e para a busca).
 - `config/site.json`: textos, URL do site e regras de categoria por playlist.
 
 ## Rodar localmente

@@ -36,16 +36,17 @@ const descHtml = v.desc
       .replace(/\n/g, '<br>')
   : '';
 
-// transcrição em parágrafos de ~45 s
+// transcrição em parágrafos de ~45 s (texto corrigido pelo glossário, quando houver)
+const tsegs = tr?.segments_fix || tr?.segments;
 const paras = [];
-if (tr?.segments?.length) {
+if (tsegs?.length) {
   let cur = null;
-  for (const [t, text] of tr.segments) {
+  for (const [t, text] of tsegs) {
     if (!cur || t - cur.t >= 45) { cur = { t: Math.floor(t), parts: [] }; paras.push(cur); }
     cur.parts.push(text);
   }
 }
-const txText = tr?.segments?.map(s => s[1]).join(' ') || '';
+const txText = tsegs?.map(s => s[1]).join(' ') || '';
 const words = txText ? txText.split(/\s+/).length : 0;
 const txSource = tr?.source === 'youtube-auto' ? 'legendas automáticas do YouTube' : 'reconhecimento de voz automático (Whisper)';
 
@@ -87,7 +88,7 @@ const share = encodeURIComponent(`${v.title} ${pageUrl}`);
           <section class="transcricao" id="transcricao">
             <details open={paras.length <= 12 ? true : undefined}>
               <summary><h2>Transcrição</h2><span data-pagefind-ignore>{compact(words)} palavras · {Math.max(1, Math.round(words / 200))} min de leitura</span></summary>
-              <p class="tx-aviso" data-pagefind-ignore>Gerada por {txSource}; pode conter erros. Clique no horário para assistir daquele ponto.</p>
+              <p class="tx-aviso" data-pagefind-ignore>Gerada por {txSource}; pode conter erros.{tr?.glossario && ' Nomes próprios ajustados pelo glossário do canal.'} Clique no horário para assistir daquele ponto.</p>
               <div class="tx-body">
                 {paras.map(p => <p><a class="ts" href={`https://youtu.be/${v.id}?t=${p.t}`} data-t={p.t} data-pagefind-ignore>{fmtSecs(p.t)}</a> {p.parts.join(' ')}</p>)}
               </div>

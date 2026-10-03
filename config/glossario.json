@@ -1,0 +1,27 @@
+{
+  "_comentario": "Glossário do canal: corrige nomes que a legenda automática deturpa. 'para' é a forma canônica; 'de' são as variantes observadas (minúsculas, sem acento opcional). A correção casa palavra/frase inteira, sem diferenciar maiúsculas. Editável pelo PagesCMS.",
+  "trocas": [
+    { "para": "Felipe Noronha", "de": ["felipe noronha", "felipe norão", "felipe noroia"] },
+    { "para": "Noronha", "de": ["noronha", "noroia", "norão", "noroinha", "noroha"] },
+    { "para": "Eu Vim de Santos", "de": ["eu vim de santos", "eu vim de santo"] },
+    { "para": "Noronhismo", "de": ["noronhismo", "noronhimo", "noronismo"] },
+    { "para": "Live do Trio", "de": ["live do trio", "live do trigo"] },
+    { "para": "Neymar", "de": ["neymar", "neimair", "neimar"] },
+    { "para": "Gabigol", "de": ["gabigol", "gabi gol", "gabri gol", "gabrigol"] },
+    { "para": "Brazão", "de": ["brazão", "brazam", "brazaum"] },
+    { "para": "Guilherme", "de": ["guilherme", "guilhermi"] },
+    { "para": "Thaciano", "de": ["thaciano", "taciano", "tassiano", "thassiano"] },
+    { "para": "Rollheiser", "de": ["rollheiser", "rolheiser", "roi raizer", "rol raizer", "roiheiser"] },
+    { "para": "Escobar", "de": ["escobar"] },
+    { "para": "Barreal", "de": ["barreal", "barrial"] },
+    { "para": "Coutinho", "de": ["coutinho", "coltinho", "cotinho"] },
+    { "para": "Carille", "de": ["carille", "carile", "careli"] },
+    { "para": "Vojvoda", "de": ["vojvoda", "voivoda"] },
+    { "para": "Sampaoli", "de": ["sampaoli", "sanpaoli"] },
+    { "para": "Marcelo Teixeira", "de": ["marcelo teixeira", "marcelo tixeira"] },
+    { "para": "Vila Belmiro", "de": ["vila belmiro"] },
+    { "para": "Paulistão", "de": ["paulistão", "paulistao"] },
+    { "para": "Série A", "de": ["série a"] },
+    { "para": "Série B", "de": ["série b"] }
+  ]
+}
