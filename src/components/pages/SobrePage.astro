@@ -12,6 +12,7 @@ const autorRedes = site.social?.autor || [];
 <Base title={T('sobre_title')} desc={T('sobre_desc')} nav="sobre" locale={locale}>
   <div class="wrap page prose">
     <header class="page-h"><h1>{T('sobre_h1')}</h1><p>{T('site_tagline')}</p></header>
+    <figure class="marca"><img src={href('img/banner-oficial.jpg')} alt="Eu Vim de Santos — por Felipe Noronha" width="1060" height="175" loading="lazy" decoding="async"></figure>
     <p set:html={T('sobre_p1', { n: site.name, a: site.author, h: site.authorHandle, v: String(videos.length) })} />
     <h2>{T('sobre_h2_ed')}</h2>
     <ul>
@@ -41,3 +42,7 @@ const autorRedes = site.social?.autor || [];
     <p set:html={T('legal_p', { u: site.repoUrl })} />
   </div>
 </Base>
+<style>
+  .marca { margin: 0 0 6px; }
+  .marca img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: var(--r); }
+</style>

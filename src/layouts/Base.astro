@@ -50,7 +50,8 @@ const langs = altLocales(Astro.url.pathname);
 <link rel="alternate" hreflang="x-default" href={canonicalPt}>
 {noindex && <meta name="robots" content="noindex">}
 <meta name="theme-color" content="#0b0b0f">
-<link rel="icon" href={href('favicon.svg')} type="image/svg+xml">
+<link rel="icon" href={href('favicon.png')} type="image/png">
+<link rel="apple-touch-icon" href={href('apple-touch-icon.png')}>
 <link rel="manifest" href={href('manifest.webmanifest')}>
 <link rel="alternate" type="application/rss+xml" title={site.name} href={L(locale === 'pt' ? 'feed.xml' : `feed-${locale}.xml`)}>
 <link rel="preconnect" href="https://i.ytimg.com">
@@ -63,7 +64,7 @@ const langs = altLocales(Astro.url.pathname);
 <meta property="og:url" content={canonical}>
 {image && <meta property="og:image" content={new URL(image, Astro.site).href}>}
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: canonicalPt, inLanguage: htmlLang, publisher: { '@type': 'Organization', name: site.name, url: canonicalPt, logo: new URL(L('logo.svg'), Astro.site).href } }).replace(/</g, '\\u003c')} />
+<script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: canonicalPt, inLanguage: htmlLang, publisher: { '@type': 'Organization', name: site.name, url: canonicalPt, logo: new URL(L('logo.png'), Astro.site).href } }).replace(/</g, '\\u003c')} />
 <slot name="head" />
 </head>
 <body>
@@ -71,7 +72,7 @@ const langs = altLocales(Astro.url.pathname);
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href={L()} aria-label={T('brand_home')}>
-      <img src={href('logo.svg')} width="36" height="36" alt="">
+      <img src={href('logo.png')} width="36" height="36" alt="">
       <span><strong>EU VIM DE SANTOS</strong><small>{T('brand_tag')}</small></span>
     </a>
     <nav class="menu" aria-label={T('menu_label')}>

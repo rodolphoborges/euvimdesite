@@ -11,6 +11,10 @@ export function GET() {
     display: 'standalone',
     background_color: '#0b0b0f',
     theme_color: '#0b0b0f',
-    icons: [{ src: href('logo.svg'), sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
+    icons: [
+      { src: href('icon-192.png'), sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: href('icon-512.png'), sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: href('icon-512.png'), sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+    ],
   }), { headers: { 'content-type': 'application/manifest+json' } });
 }

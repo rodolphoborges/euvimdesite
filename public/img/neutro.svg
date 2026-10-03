@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="Eu Vim de Santos">
-  <rect width="1280" height="720" fill="#14141b"/>
-  <rect x="40" y="40" width="1200" height="640" rx="24" fill="none" stroke="#2a2a33" stroke-width="2"/>
+  <rect width="1280" height="720" fill="#010066"/>
+  <rect x="40" y="40" width="1200" height="640" rx="24" fill="none" stroke="#e0ab1f" stroke-width="2" opacity="0.35"/>
   <g transform="translate(640,320)" opacity="0.9">
     <circle r="72" fill="none" stroke="#e0ab1f" stroke-width="6"/>
     <path d="M-22 -34 34 0 -22 34z" fill="#e0ab1f"/>
