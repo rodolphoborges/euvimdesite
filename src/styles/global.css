@@ -191,7 +191,11 @@ button, input { font: inherit; color: inherit; }
 /* ---------- boletim (resumo revisado) ---------- */
 .boletim { margin-top: 22px; background: var(--s1); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--r); padding: 18px 20px; }
 .boletim .hero-k { margin: 0; }
-.boletim h2 { font: 900 22px/1.1 var(--display); text-transform: uppercase; margin: 10px 0 8px; }
+.boletim summary { list-style: none; display: flex; align-items: center; gap: 10px; cursor: pointer; font: 900 17px/1.25 var(--display); text-transform: uppercase; }
+.boletim summary::-webkit-details-marker { display: none; }
+.boletim summary::after { content: "+"; margin-left: auto; flex-shrink: 0; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--gold); font: 800 18px/1 var(--font); }
+.boletim[open] summary::after { content: "–"; }
+.bol-cap { color: var(--tx3); font-size: 12px !important; margin: 8px 0 0 !important; }
 .boletim p { margin: 0; color: var(--tx2); font-size: 15px; }
 .boletim ul { margin: 12px 0 0; padding-left: 20px; color: var(--tx2); font-size: 15px; display: grid; gap: 6px; }
 .bol-todos { margin: 12px 0 0 !important; font-size: 14px !important; }

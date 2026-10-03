@@ -172,6 +172,11 @@ const tabs = [['', 'Início', 'home', ''], ['videos/', 'Vídeos', 'videos', 'vid
       }
     }
   });
+  // âncora para <details> fechado (ex.: /boletins/ → #boletim): abre ao chegar
+  if (location.hash.length > 1) {
+    const dh = document.querySelector(location.hash);
+    if (dh?.tagName === 'DETAILS') (dh as HTMLDetailsElement).open = true;
+  }
   // menu móvel: fecha ao clicar fora, com Escape ou ao trocar de estado
   const mnav = document.querySelector<HTMLDetailsElement>('.mnav');
   const msummary = mnav?.querySelector('summary');

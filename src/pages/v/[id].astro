@@ -86,17 +86,17 @@ const share = encodeURIComponent(`${v.title} ${pageUrl}`);
         </div>
         {descHtml && <section class="desc"><h2 class="sr">Descrição</h2><p set:html={descHtml} /></section>}
         {bol?.titulo && (
-          <section class="boletim" id="boletim">
-            <p class="hero-k"><span class="pill">Boletim</span> resumo automático revisado</p>
-            <h2>{bol.titulo}</h2>
+          <details class="boletim" id="boletim">
+            <summary><span class="pill">Boletim</span> <strong>{bol.titulo}</strong></summary>
+            <p class="bol-cap">Resumo automático revisado.</p>
             <p>{bol.lead}</p>
             <ul>{bol.pontos.map(p => <li>{p}</li>)}</ul>
             <p class="bol-todos"><a href={href('boletins/')}>Todos os boletins ›</a></p>
-          </section>
+          </details>
         )}
         {paras.length > 0 && (
           <section class="transcricao" id="transcricao">
-            <details open={paras.length <= 12 ? true : undefined}>
+            <details>
               <summary><h2>Transcrição</h2><span data-pagefind-ignore>{compact(words)} palavras · {Math.max(1, Math.round(words / 200))} min de leitura</span></summary>
               <p class="tx-aviso" data-pagefind-ignore>Gerada por {txSource}; pode conter erros.{tr?.glossario && ' Nomes próprios ajustados pelo glossário do canal.'} Clique no horário para assistir daquele ponto.</p>
               <div class="tx-body">
