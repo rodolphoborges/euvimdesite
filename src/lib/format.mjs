@@ -15,7 +15,13 @@ export const href = (p = '', locale = 'pt') => BASE + (locale === 'pt' ? '' : lo
 // Imagens servidas pelo próprio site (baixadas por scripts/thumbs.mjs).
 // Sem arquivo local, usa uma imagem neutra em vez de chamar o Google.
 const local = (file, fallback = 'img/neutro.svg') => href(existsSync(`public/${file}`) ? file : fallback);
-export const thumb = id => local(`img/v/${id}.webp`);
+// Capa do card: webp local, senão jpg local, senão neutra (nunca chama o Google).
+export const thumb = id => {
+  for (const e of ['webp', 'jpg']) {
+    if (existsSync(`public/img/v/${id}.${e}`)) return href(`img/v/${id}.${e}`);
+  }
+  return href('img/neutro.svg');
+};
 export const thumbHq = id => local(`img/v/${id}-hq.jpg`, existsSync(`public/img/v/${id}.webp`) ? `img/v/${id}.webp` : 'img/neutro.svg');
 export const avatar = handle => existsSync(`public/img/c/${slugify(handle)}.jpg`) ? href(`img/c/${slugify(handle)}.jpg`) : '';
 
