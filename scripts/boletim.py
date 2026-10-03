@@ -246,14 +246,14 @@ def fila(repo: str, dry: bool = False):
         d = load_json(p, None)
         if d and d.get("titulo"):
             pend.append((p.stem, d["titulo"], d.get("tentativa", 1)))
-    body = ["Rascunhos do robô. Nada aqui está no ar: o site só lê `data/boletins/<id>.json`.", ""]
+    body = ["O robô preparou resumos dos vídeos abaixo. Eles ainda NÃO estão no ar — só aparecem no site depois que você aprovar.", ""]
     if pend:
-        body += ["| vídeo | tentativa | rascunho |", "|---|---|---|"]
-        body += [f"| {t} | {n} | [`{v}.json`](https://github.com/{repo}/blob/main/data/boletins/_revisar/{v}.json) |" for v, t, n in pend]
+        body += ["| Vídeo | Versão | Ler antes de decidir |", "|---|---|---|"]
+        body += [f"| {t} | {n}ª | [ler rascunho](https://github.com/{repo}/blob/main/data/boletins/_revisar/{v}.json) |" for v, t, n in pend]
         body += ["",
-                 "**Aprovar:** Actions → boletim → Run workflow → modo=revisar, acao=aprovar, ids=`<id> …` (vazio = todos).",
-                 "**Reprovar:** mesmo caminho com acao=reprovar.",
-                 "**Regenerar:** modo=gerar, ids=`<id>`, instrucao=`texto livre` (ex.: `mais curto`)."]
+                 "Para colocar no ar: aba Actions → workflow boletim → Run workflow, com modo=revisar e acao=aprovar. No campo dos vídeos, deixe vazio para aprovar todos ou escreva os códigos (ex.: `4BNSnJhLBXI`).",
+                 "Se não gostou e quer descartar: mesmo caminho, com acao=reprovar. O rascunho é apagado e nada vai ao ar.",
+                 "Para pedir outra versão: modo=gerar, escreva o código do vídeo e diga o que mudar no campo de instrução (ex.: `mais curto`)."]
     text = "\n".join(body)
     if dry:
         print(text)
@@ -271,7 +271,7 @@ def fila(repo: str, dry: bool = False):
             subprocess.run(["gh", "issue", "create", "--repo", repo, "--title", "Boletins aguardando revisão", "--body", text], check=True)
     else:
         for i in found:
-            subprocess.run(["gh", "issue", "close", str(i["number"]), "--repo", repo, "--comment", "Fila zerada."], check=True)
+            subprocess.run(["gh", "issue", "close", str(i["number"]), "--repo", repo, "--comment", "Fila zerada: tudo revisado. Até a próxima leva!"], check=True)
     print(f"pendentes: {len(pend)}")
 
 
