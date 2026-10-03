@@ -11,6 +11,7 @@ Site estático para acompanhar o canal [@EuVimdeSantos](https://www.youtube.com/
 | Peça | O que faz |
 |---|---|
 | `scripts/fetch.mjs` | Lê o RSS do canal e a YouTube Data API: percorre **todo** o acervo, atualiza views/curtidas/comentários/duração, detecta lives e shorts, categoriza e busca os canais indicados. Grava `data/*.json`. Zero dependências. |
+| `scripts/thumbs.mjs` | Baixa capas e avatares para `public/img/` (o pipeline roda após o fetch; o visitante não requisita nada ao Google só por navegar). Zero dependências. |
 | `scripts/transcribe.py` | Transcreve os vídeos em pt-BR, do mais novo ao mais antigo: usa a legenda do YouTube quando existe, senão baixa só o áudio e roda o **Whisper** (faster-whisper, CPU). Grava `data/transcripts/<id>.json`. |
 | `scripts/boletim.py` | Gera **rascunhos** de boletim (resumo jornalístico) a partir da transcrição corrigida: Ollama local (grátis) ou API compatível com OpenAI. Grava `data/boletins/_revisar/<id>.json`. **Nunca publica sozinho.** |
 | `src/` (Astro) | Gera o site como HTML estático puro, praticamente sem JavaScript. O player do YouTube só carrega no clique. |
