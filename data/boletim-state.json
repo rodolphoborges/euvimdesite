@@ -1,4 +1,9 @@
 {
- "fails": {},
- "lastRun": "2026-11-09T22:35:55Z"
+ "fails": {
+  "a1DEX6CLFEk": {
+   "n": 1,
+   "err": "defina BOLETIM_API_URL (BOLETIM_API_KEY só se o servidor exigir)"
+  }
+ },
+ "lastRun": "2026-11-16T22:24:06Z"
 }
