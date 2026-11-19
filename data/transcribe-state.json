@@ -1,6 +1,402 @@
 {
- "fails": {},
- "lastRun": "2026-11-18T20:51:23Z",
+ "fails": {
+  "bFn1pQw2LzA": {
+   "n": 1,
+   "last": "2026-11-19T07:51:29Z",
+   "err": "ERROR: [youtube] bFn1pQw2LzA: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "YPvaivo8wuE": {
+   "n": 1,
+   "last": "2026-11-19T07:52:02Z",
+   "err": "ERROR: [youtube] YPvaivo8wuE: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "Dk-RYE20XYs": {
+   "n": 1,
+   "last": "2026-11-19T07:52:30Z",
+   "err": "ERROR: [youtube] Dk-RYE20XYs: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "MIVPWnCgR-E": {
+   "n": 1,
+   "last": "2026-11-19T07:53:05Z",
+   "err": "ERROR: [youtube] MIVPWnCgR-E: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "I50wucFa9o0": {
+   "n": 1,
+   "last": "2026-11-19T07:53:37Z",
+   "err": "ERROR: [youtube] I50wucFa9o0: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "0aso7ld3DZ0": {
+   "n": 1,
+   "last": "2026-11-19T07:54:04Z",
+   "err": "ERROR: [youtube] 0aso7ld3DZ0: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "mtb8brCOc_s": {
+   "n": 1,
+   "last": "2026-11-19T07:54:33Z",
+   "err": "ERROR: [youtube] mtb8brCOc_s: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "tBPJvERsAQ4": {
+   "n": 1,
+   "last": "2026-11-19T07:55:07Z",
+   "err": "ERROR: [youtube] tBPJvERsAQ4: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "i5P9tt43EKw": {
+   "n": 1,
+   "last": "2026-11-19T07:55:40Z",
+   "err": "ERROR: [youtube] i5P9tt43EKw: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "4fH7F7u2Uds": {
+   "n": 1,
+   "last": "2026-11-19T07:56:04Z",
+   "err": "ERROR: [youtube] 4fH7F7u2Uds: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "uc2-e3h2nKo": {
+   "n": 1,
+   "last": "2026-11-19T07:56:36Z",
+   "err": "ERROR: [youtube] uc2-e3h2nKo: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "8sCi722ORz0": {
+   "n": 1,
+   "last": "2026-11-19T07:57:09Z",
+   "err": "ERROR: [youtube] 8sCi722ORz0: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "bRNQYksHR9c": {
+   "n": 1,
+   "last": "2026-11-19T07:57:47Z",
+   "err": "ERROR: [youtube] bRNQYksHR9c: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "c7-soLnQDQ8": {
+   "n": 1,
+   "last": "2026-11-19T07:58:17Z",
+   "err": "ERROR: [youtube] c7-soLnQDQ8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "oeQFgbTx1Q8": {
+   "n": 1,
+   "last": "2026-11-19T07:58:47Z",
+   "err": "ERROR: [youtube] oeQFgbTx1Q8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "VI6sSG0qNIw": {
+   "n": 1,
+   "last": "2026-11-19T07:59:15Z",
+   "err": "ERROR: [youtube] VI6sSG0qNIw: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "E0aRIJShrCc": {
+   "n": 1,
+   "last": "2026-11-19T07:59:49Z",
+   "err": "ERROR: [youtube] E0aRIJShrCc: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "iuLXjf5Ixyg": {
+   "n": 1,
+   "last": "2026-11-19T08:00:15Z",
+   "err": "ERROR: [youtube] iuLXjf5Ixyg: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "4ff4sw-VS2w": {
+   "n": 1,
+   "last": "2026-11-19T08:00:46Z",
+   "err": "ERROR: [youtube] 4ff4sw-VS2w: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "QsXlXCG_lJ8": {
+   "n": 1,
+   "last": "2026-11-19T08:01:13Z",
+   "err": "ERROR: [youtube] QsXlXCG_lJ8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "14Le3Gf0UCs": {
+   "n": 1,
+   "last": "2026-11-19T08:01:40Z",
+   "err": "ERROR: [youtube] 14Le3Gf0UCs: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "68fpAgBtsBk": {
+   "n": 1,
+   "last": "2026-11-19T08:02:11Z",
+   "err": "ERROR: [youtube] 68fpAgBtsBk: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "pi-RPyBVKfs": {
+   "n": 1,
+   "last": "2026-11-19T08:02:35Z",
+   "err": "ERROR: [youtube] pi-RPyBVKfs: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "5vfEg-q7mhM": {
+   "n": 1,
+   "last": "2026-11-19T08:03:06Z",
+   "err": "ERROR: [youtube] 5vfEg-q7mhM: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "LETqOZew1Tc": {
+   "n": 1,
+   "last": "2026-11-19T08:03:35Z",
+   "err": "ERROR: [youtube] LETqOZew1Tc: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "_hkyxVP2iO8": {
+   "n": 1,
+   "last": "2026-11-19T08:04:03Z",
+   "err": "ERROR: [youtube] _hkyxVP2iO8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "X5eEKmdQors": {
+   "n": 1,
+   "last": "2026-11-19T08:04:37Z",
+   "err": "ERROR: [youtube] X5eEKmdQors: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "tUWhyIqvEL0": {
+   "n": 1,
+   "last": "2026-11-19T08:05:05Z",
+   "err": "ERROR: [youtube] tUWhyIqvEL0: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "XVE4uyA8zUg": {
+   "n": 1,
+   "last": "2026-11-19T08:05:35Z",
+   "err": "ERROR: [youtube] XVE4uyA8zUg: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "WPjhAy0peP0": {
+   "n": 1,
+   "last": "2026-11-19T08:06:01Z",
+   "err": "ERROR: [youtube] WPjhAy0peP0: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "qGeaoQDHQYg": {
+   "n": 1,
+   "last": "2026-11-19T08:06:31Z",
+   "err": "ERROR: [youtube] qGeaoQDHQYg: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "gYRUsx8nx1k": {
+   "n": 1,
+   "last": "2026-11-19T08:07:04Z",
+   "err": "ERROR: [youtube] gYRUsx8nx1k: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "qxdQb1CLM9o": {
+   "n": 1,
+   "last": "2026-11-19T08:07:40Z",
+   "err": "ERROR: [youtube] qxdQb1CLM9o: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "n4oIzhufZnk": {
+   "n": 1,
+   "last": "2026-11-19T08:08:11Z",
+   "err": "ERROR: [youtube] n4oIzhufZnk: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "ZByaRzT9UIs": {
+   "n": 1,
+   "last": "2026-11-19T08:08:44Z",
+   "err": "ERROR: [youtube] ZByaRzT9UIs: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "3AVcF-mdjxw": {
+   "n": 1,
+   "last": "2026-11-19T08:09:13Z",
+   "err": "ERROR: [youtube] 3AVcF-mdjxw: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "82t_56jQT7I": {
+   "n": 1,
+   "last": "2026-11-19T08:09:45Z",
+   "err": "ERROR: [youtube] 82t_56jQT7I: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "AO6rWwBmq3E": {
+   "n": 1,
+   "last": "2026-11-19T08:10:19Z",
+   "err": "ERROR: [youtube] AO6rWwBmq3E: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "io8shZgMyDA": {
+   "n": 1,
+   "last": "2026-11-19T08:10:48Z",
+   "err": "ERROR: [youtube] io8shZgMyDA: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "digwfqLmpM8": {
+   "n": 1,
+   "last": "2026-11-19T08:11:18Z",
+   "err": "ERROR: [youtube] digwfqLmpM8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "fOx_6u-IVgE": {
+   "n": 1,
+   "last": "2026-11-19T08:11:52Z",
+   "err": "ERROR: [youtube] fOx_6u-IVgE: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "ZmL3hIodDaE": {
+   "n": 1,
+   "last": "2026-11-19T08:12:20Z",
+   "err": "ERROR: [youtube] ZmL3hIodDaE: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "l73BaZK8WFQ": {
+   "n": 1,
+   "last": "2026-11-19T08:12:48Z",
+   "err": "ERROR: [youtube] l73BaZK8WFQ: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "JBRl5Wcki_4": {
+   "n": 1,
+   "last": "2026-11-19T08:13:18Z",
+   "err": "ERROR: [youtube] JBRl5Wcki_4: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "-hPiLip57Jc": {
+   "n": 1,
+   "last": "2026-11-19T08:13:49Z",
+   "err": "ERROR: [youtube] -hPiLip57Jc: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "NNT-NsNoM5s": {
+   "n": 1,
+   "last": "2026-11-19T08:14:22Z",
+   "err": "ERROR: [youtube] NNT-NsNoM5s: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "BkeVibPH1is": {
+   "n": 1,
+   "last": "2026-11-19T08:14:56Z",
+   "err": "ERROR: [youtube] BkeVibPH1is: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "LQyjrroNI1E": {
+   "n": 1,
+   "last": "2026-11-19T08:15:24Z",
+   "err": "ERROR: [youtube] LQyjrroNI1E: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "FaA95MIfIVo": {
+   "n": 1,
+   "last": "2026-11-19T08:15:51Z",
+   "err": "ERROR: [youtube] FaA95MIfIVo: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "gwLNk40Xsro": {
+   "n": 1,
+   "last": "2026-11-19T08:16:19Z",
+   "err": "ERROR: [youtube] gwLNk40Xsro: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "_W7T622wXUQ": {
+   "n": 1,
+   "last": "2026-11-19T08:16:47Z",
+   "err": "ERROR: [youtube] _W7T622wXUQ: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "Q-R3tD6aRXc": {
+   "n": 1,
+   "last": "2026-11-19T08:17:19Z",
+   "err": "ERROR: [youtube] Q-R3tD6aRXc: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "XPQi-NcalHo": {
+   "n": 1,
+   "last": "2026-11-19T08:17:51Z",
+   "err": "ERROR: [youtube] XPQi-NcalHo: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "B-31Nnfvl6g": {
+   "n": 1,
+   "last": "2026-11-19T08:18:18Z",
+   "err": "ERROR: [youtube] B-31Nnfvl6g: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "F-pmEpA_3B4": {
+   "n": 1,
+   "last": "2026-11-19T08:18:44Z",
+   "err": "ERROR: [youtube] F-pmEpA_3B4: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "NGKt22q5Caw": {
+   "n": 1,
+   "last": "2026-11-19T08:19:19Z",
+   "err": "ERROR: [youtube] NGKt22q5Caw: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "4FovqDPFRxo": {
+   "n": 1,
+   "last": "2026-11-19T08:19:53Z",
+   "err": "ERROR: [youtube] 4FovqDPFRxo: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "0Yz4K_wugpo": {
+   "n": 1,
+   "last": "2026-11-19T08:20:26Z",
+   "err": "ERROR: [youtube] 0Yz4K_wugpo: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "f1IvYLrxonc": {
+   "n": 1,
+   "last": "2026-11-19T08:20:50Z",
+   "err": "ERROR: [youtube] f1IvYLrxonc: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "zc6CJr3Se44": {
+   "n": 1,
+   "last": "2026-11-19T08:21:22Z",
+   "err": "ERROR: [youtube] zc6CJr3Se44: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "lEv3QYwwr8Y": {
+   "n": 1,
+   "last": "2026-11-19T08:21:53Z",
+   "err": "ERROR: [youtube] lEv3QYwwr8Y: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "VRruWwzkz-E": {
+   "n": 1,
+   "last": "2026-11-19T08:22:23Z",
+   "err": "ERROR: [youtube] VRruWwzkz-E: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "39rgk9ne-o4": {
+   "n": 1,
+   "last": "2026-11-19T08:22:49Z",
+   "err": "ERROR: [youtube] 39rgk9ne-o4: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "PmGNduz9nNE": {
+   "n": 1,
+   "last": "2026-11-19T08:23:20Z",
+   "err": "ERROR: [youtube] PmGNduz9nNE: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "F3183E3A3RI": {
+   "n": 1,
+   "last": "2026-11-19T08:23:55Z",
+   "err": "ERROR: [youtube] F3183E3A3RI: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "34xCX9QOl1g": {
+   "n": 1,
+   "last": "2026-11-19T08:24:26Z",
+   "err": "ERROR: [youtube] 34xCX9QOl1g: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "CCFs7yPG9dM": {
+   "n": 1,
+   "last": "2026-11-19T08:24:58Z",
+   "err": "ERROR: [youtube] CCFs7yPG9dM: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "7lVDPU8zn8U": {
+   "n": 1,
+   "last": "2026-11-19T08:25:25Z",
+   "err": "ERROR: [youtube] 7lVDPU8zn8U: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "2wTaW8bii3c": {
+   "n": 1,
+   "last": "2026-11-19T08:25:53Z",
+   "err": "ERROR: [youtube] 2wTaW8bii3c: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "hqQuJ-oen_0": {
+   "n": 1,
+   "last": "2026-11-19T08:26:20Z",
+   "err": "ERROR: [youtube] hqQuJ-oen_0: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "WaTFQXbman0": {
+   "n": 1,
+   "last": "2026-11-19T08:26:54Z",
+   "err": "ERROR: [youtube] WaTFQXbman0: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "H3nUV4S61D8": {
+   "n": 1,
+   "last": "2026-11-19T08:27:26Z",
+   "err": "ERROR: [youtube] H3nUV4S61D8: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "JK4Wp9LTaOU": {
+   "n": 1,
+   "last": "2026-11-19T08:27:55Z",
+   "err": "ERROR: [youtube] JK4Wp9LTaOU: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "l89MdUk_-5w": {
+   "n": 1,
+   "last": "2026-11-19T08:28:26Z",
+   "err": "ERROR: [youtube] l89MdUk_-5w: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "BK78bRMDq2M": {
+   "n": 1,
+   "last": "2026-11-19T08:29:00Z",
+   "err": "ERROR: [youtube] BK78bRMDq2M: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "va1BGs1hfVo": {
+   "n": 1,
+   "last": "2026-11-19T08:29:26Z",
+   "err": "ERROR: [youtube] va1BGs1hfVo: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "8twjB5KpIwU": {
+   "n": 1,
+   "last": "2026-11-19T08:29:58Z",
+   "err": "ERROR: [youtube] 8twjB5KpIwU: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "BNEl2q2DHnI": {
+   "n": 1,
+   "last": "2026-11-19T08:30:26Z",
+   "err": "ERROR: [youtube] BNEl2q2DHnI: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  },
+  "Y_B8RvDMBBk": {
+   "n": 1,
+   "last": "2026-11-19T08:30:59Z",
+   "err": "ERROR: [youtube] Y_B8RvDMBBk: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
+  }
+ },
+ "lastRun": "2026-11-19T08:31:15Z",
  "transcribed": 3,
- "blockedAt": "2026-11-18T20:51:23Z"
+ "blockedAt": "2026-11-19T08:31:15Z"
 }
