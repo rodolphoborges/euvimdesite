@@ -1,9 +1,9 @@
 {
  "fails": {
   "a1DEX6CLFEk": {
-   "n": 1,
+   "n": 2,
    "err": "defina BOLETIM_API_URL (BOLETIM_API_KEY só se o servidor exigir)"
   }
  },
- "lastRun": "2026-11-16T22:24:06Z"
+ "lastRun": "2026-11-24T00:09:15Z"
 }
