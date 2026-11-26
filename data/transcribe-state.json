@@ -6226,7 +6226,7 @@
    "err": "ERROR: [youtube] 0eCV-XrYRhI: Failed to extract any player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you a"
   }
  },
- "lastRun": "2026-11-26T02:56:29Z",
+ "lastRun": "2026-11-26T08:50:17Z",
  "transcribed": 3,
- "blockedAt": "2026-11-25T09:02:21Z"
+ "blockedAt": "2026-11-26T08:50:17Z"
 }
